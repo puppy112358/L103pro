@@ -15,6 +15,8 @@ void TCJSendValue(char *name, int value);
 
 void TCJSendTxt(char *name, char *value);
 
+void TCJSetPic(char *name, int id);
+
 void TCJSendAnyProperty(char *object_name, char *property, char *value);
 
 void TCJSendAny(char *any);

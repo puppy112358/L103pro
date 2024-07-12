@@ -1,3 +1,4 @@
+#include <string.h>
 #include "uart.h"
 /*******************************************************************************
   * @º¯ÊýÃû³Æ	USART_Send
@@ -50,15 +51,48 @@ void USARTx_CFG(void)
     USART_InitStructure.USART_Mode = USART_Mode_Tx | USART_Mode_Rx;
 
     USART_Init(USART2, &USART_InitStructure);
-    USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
-//    USART_ITConfig(USART2, USART_IT_IDLE, ENABLE);
 
     NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
-    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 1;
-    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
     NVIC_InitStructure.NVIC_IRQChannelCmd = ENABLE;
+    NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 2;
+    NVIC_InitStructure.NVIC_IRQChannelSubPriority = 1;
+
     NVIC_Init(&NVIC_InitStructure);
+
+    DMA_Cmd(DMA1_Channel6,ENABLE);//USART2->RX
+    USART_ITConfig(USART2, USART_IT_IDLE, ENABLE);//¿ÕÏÐÖÐ¶Ï
+//    USART_DMACmd(USART2,USART_DMAReq_Rx,ENABLE);
 
     USART_Cmd(USART2, ENABLE);
 }
+/*********************************************************************
+ * @fn      DMA_INIT
+ *
+ * @brief   Configures the DMA for USART2 & USART3.
+ *
+ * @return  none
+ */
+void DMA_INIT(void)
+{
+    DMA_InitTypeDef DMA_InitStructure = {0};
+    RCC_HBPeriphClockCmd(RCC_HBPeriph_DMA1, ENABLE);
+
+    DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
+    DMA_InitStructure.DMA_MemoryInc = DMA_MemoryInc_Enable;
+    DMA_InitStructure.DMA_PeripheralDataSize = DMA_PeripheralDataSize_Byte;
+    DMA_InitStructure.DMA_MemoryDataSize = DMA_MemoryDataSize_Byte;
+    DMA_InitStructure.DMA_Mode = DMA_Mode_Normal;
+    DMA_InitStructure.DMA_Priority = DMA_Priority_VeryHigh;
+    DMA_InitStructure.DMA_M2M = DMA_M2M_Disable;
+
+    DMA_DeInit(DMA1_Channel6);
+    DMA_InitStructure.DMA_PeripheralBaseAddr = (u32)(&USART2->DATAR);
+    DMA_InitStructure.DMA_MemoryBaseAddr = (u32)RxBuffer1;
+    DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralSRC;
+    DMA_InitStructure.DMA_BufferSize = strlen(RxBuffer1);
+    DMA_Init(DMA1_Channel6, &DMA_InitStructure);
+
+}
+
+
 
