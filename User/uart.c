@@ -1,28 +1,28 @@
 #include "uart.h"
 #include "TJCScreen.h"
-//´®¿ÚÆÁÇåÆÁ
+//ä¸²å£å±æ¸…å±
 void clear_TJC(){
     char Screen_Txt[20];
     char Index[3];
-    // µçÑ¹ÏÔÊ¾³õÊ¼»¯
+    // ç”µå‹æ˜¾ç¤ºåˆå§‹åŒ–
     for (int i = 1; i < 22; i += 3) {
-        sprintf(Screen_Txt, "µçÑ¹£º%.4fV",0.0);
+        sprintf(Screen_Txt, "ç”µå‹ï¼š%.4fV",0.0);
         sprintf(Index, "t%d", i);
         TCJSendTxt(Index, Screen_Txt);
     }
-    // µçÁ÷ÏÔÊ¾³õÊ¼»¯
+    // ç”µæµæ˜¾ç¤ºåˆå§‹åŒ–
     for (int i = 0; i < 21; i += 3) {
-        sprintf(Screen_Txt, "µçÁ÷£º%.4fA", 0.0);
+        sprintf(Screen_Txt, "ç”µæµï¼š%.4fA", 0.0);
         sprintf(Index, "t%d", i);
         TCJSendTxt(Index, Screen_Txt);
     }
-    // ¹¦ºÄÏÔÊ¾³õÊ¼»¯
+    // åŠŸè€—æ˜¾ç¤ºåˆå§‹åŒ–
     for (int i = 2; i < 23; i += 3) {
-        sprintf(Screen_Txt, "¹¦ºÄ£º%.4fW", 0.0);
+        sprintf(Screen_Txt, "åŠŸè€—ï¼š%.4fW", 0.0);
         sprintf(Index, "t%d", i);
         TCJSendTxt(Index, Screen_Txt);
     }
-    // Í¼Æ¬ÏÔÊ¾³õÊ¼»¯
+    // å›¾ç‰‡æ˜¾ç¤ºåˆå§‹åŒ–
     for (int i = 0; i < 7; i++) {
         sprintf(Index, "p%d", i);
         TCJSetPic(Index, i);
@@ -30,20 +30,20 @@ void clear_TJC(){
 
 }
 /*******************************************************************************
-  * @º¯ÊıÃû³Æ	USART_Send
-  * @º¯ÊıËµÃ÷   ·¢ËÍĞÅÏ¢
-  * @ÊäÈë²ÎÊı   _UART£º´®¿ÚºÅ
-								data£ºÒª·¢ËÍµÄĞÅÏ¢µÄÊ×µØÖ·
-                len£º ·¢ËÍµÄ³¤¶È
-  * @Êä³ö²ÎÊı   ÎŞ
-  * @·µ»Ø²ÎÊı   ÎŞ
+  * @å‡½æ•°åç§°	USART_Send
+  * @å‡½æ•°è¯´æ˜   å‘é€ä¿¡æ¯
+  * @è¾“å…¥å‚æ•°   _UARTï¼šä¸²å£å·
+								dataï¼šè¦å‘é€çš„ä¿¡æ¯çš„é¦–åœ°å€
+                lenï¼š å‘é€çš„é•¿åº¦
+  * @è¾“å‡ºå‚æ•°   æ— 
+  * @è¿”å›å‚æ•°   æ— 
 *******************************************************************************/
 void USART_Send(USART_TypeDef *_UART,u8 *data, u8 len)
 {
     for(int i = 0; i < len; i++)
     {
-        USART_SendData(_UART, data[i]); //Ïò´®¿Ú·¢ËÍÊı¾İ
-        while(USART_GetFlagStatus(_UART, USART_FLAG_TXE) == RESET); //µÈ´ı·¢ËÍ½áÊø
+        USART_SendData(_UART, data[i]); //å‘ä¸²å£å‘é€æ•°æ®
+        while(USART_GetFlagStatus(_UART, USART_FLAG_TXE) == RESET); //ç­‰å¾…å‘é€ç»“æŸ
     }
 }
 /*********************************************************************

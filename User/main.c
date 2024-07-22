@@ -44,13 +44,13 @@ void BASIC_TIM_IRQHandler (void) __attribute__((interrupt("WCH-Interrupt-fast"))
 int main(void) {
 /*
  * 5A  5V
- *  ¼ÆËã¹«Ê½£º
- *  µçÁ÷LSB = Ô¤¼Æ×î´óµçÁ÷ / 2 ^ 15       0.0002
+ *  è®¡ç®—å…¬å¼ï¼š
+ *  ç”µæµLSB = é¢„è®¡æœ€å¤§ç”µæµ / 2 ^ 15       0.0002
 
-    Ğ£×¼¼Ä´æÆ÷=0.00512/µçÁ÷LSB/0.002      12800  3200
-    ²âÁ¿µçÁ÷ = µçÁ÷¼Ä´æÆ÷Öµ*µçÁ÷LSB = ²¢ÁªµçÑ¹¼Ä´æÆ÷Öµ*Ğ£×¼¼Ä´æÆ÷Öµ/2048
- *  ×ÜÏßµçÑ¹ = ×ÜÏßµçÑ¹¼Ä´æÆ÷Öµ*1.25
- *  ¹¦ÂÊ = ¹¦ÂÊ¼Ä´æÆ÷Öµ*25*µçÁ÷LSB=µçÁ÷*×ÜÏßµçÑ¹
+    æ ¡å‡†å¯„å­˜å™¨=0.00512/ç”µæµLSB/0.002      12800  3200
+    æµ‹é‡ç”µæµ = ç”µæµå¯„å­˜å™¨å€¼*ç”µæµLSB = å¹¶è”ç”µå‹å¯„å­˜å™¨å€¼*æ ¡å‡†å¯„å­˜å™¨å€¼/2048
+ *  æ€»çº¿ç”µå‹ = æ€»çº¿ç”µå‹å¯„å­˜å™¨å€¼*1.25
+ *  åŠŸç‡ = åŠŸç‡å¯„å­˜å™¨å€¼*25*ç”µæµLSB=ç”µæµ*æ€»çº¿ç”µå‹
  * */
     NVIC_PriorityGroupConfig(NVIC_PriorityGroup_1);
     SystemCoreClockUpdate();
@@ -63,19 +63,19 @@ int main(void) {
     TJCScreenInit(USART2);
     BASIC_TIM_Config();
     BASIC_TIM_NVIC_Config();
-//    WS2812Init();
+    WS2812Init();
     INA226_Init();
     kaiguan_Init();
     clear_TJC();
 
-//  ´®¿ÚÆÁÎÄ±¾
+//  ä¸²å£å±æ–‡æœ¬
     char Screen_Txt[20];
     char Index[3];
     uint8_t led = 0;
     u16 temp = 0;
 
     int j = 0;
-    int n = 0;//Ñ­»·20´ÎË¢ĞÂÒ»´ÎÊı¾İ
+    int n = 0;//å¾ªç¯20æ¬¡åˆ·æ–°ä¸€æ¬¡æ•°æ®
 
     uint32_t color__list[] = {
         0x00aa00,
@@ -93,12 +93,12 @@ int main(void) {
  * gua 00 00 00 0
  */
     while (1) {
-        c = color__list[n%8];//±äÉ«
+        c = color__list[n%8];//å˜è‰²
 
         key = ReadKey();
         if (old_key != key){
             if (key != 0) {
-                RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1, ENABLE);//¿ªÊ¼¼ÆÊ±
+                RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1, ENABLE);//å¼€å§‹è®¡æ—¶
             } else
             {
                 RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1,DISABLE);
@@ -111,8 +111,6 @@ int main(void) {
             kaiguanmode[old_key-1] = working;
             chang_an[old_key-1] = 0;
             set5PixelColor(2,hex2rgb(c));
-
-
         }
 
 
@@ -125,7 +123,7 @@ int main(void) {
         GPIO_WriteBit(GPIOA, GPIO_Pin_0, led);
 
         Delay_Ms(1);
-        //µçÑ¹¼à²â
+        //ç”µå‹ç›‘æµ‹
 
         if (n++ == 20) {
             n = 0;
@@ -185,15 +183,15 @@ int main(void) {
                     set3PixelColor(2, 0xff, 0, 0);
                 }
             }
-            // ¸üĞÂ´®¿ÚÆÁµçÑ¹Êı¾İ
+            // æ›´æ–°ä¸²å£å±ç”µå‹æ•°æ®
             int j = 0;
             for (int i = 1; i < 22; i += 3) {
-                sprintf(Screen_Txt, "µçÑ¹£º%.4fV", Bus_V[j]);
+                sprintf(Screen_Txt, "ç”µå‹ï¼š%.4fV", Bus_V[j]);
                 sprintf(Index, "t%d", i);
                 TCJSendTxt(Index, Screen_Txt);
                 j++;
             }
-            //µçÁ÷¼à²â
+            //ç”µæµç›‘æµ‹
             if (INA226_Read2Byte_I2C1(addr1, Current_Reg, &temp) == 0) {
                 if (temp < 65000) {
                     current[0] = temp * 0.0002;
@@ -250,10 +248,10 @@ int main(void) {
                     current[7] = 0;
                 }
             }
-            // ¸üĞÂ´®¿ÚÆÁµçÁ÷Êı¾İ
+            // æ›´æ–°ä¸²å£å±ç”µæµæ•°æ®
             j = 0;
             for (int i = 0; i < 21; i += 3) {
-                sprintf(Screen_Txt, "µçÁ÷£º%.4fA", current[j]);
+                sprintf(Screen_Txt, "ç”µæµï¼š%.4fA", current[j]);
                 sprintf(Index, "t%d", i);
                 TCJSendTxt(Index, Screen_Txt);
                 j++;
@@ -267,10 +265,10 @@ int main(void) {
             power[5] = Bus_V[5] * current[5];
             power[6] = Bus_V[6] * current[6];
             power[7] = Bus_V[7] * current[7];
-            // ¸üĞÂ´®¿ÚÆÁ¹¦ºÄÊı¾İ
+            // æ›´æ–°ä¸²å£å±åŠŸè€—æ•°æ®
             j = 0;
             for (int i = 2; i < 23; i += 3) {
-                sprintf(Screen_Txt, "¹¦ºÄ£º%.4fW", power[j]);
+                sprintf(Screen_Txt, "åŠŸè€—ï¼š%.4fW", power[j]);
                 sprintf(Index, "t%d", i);
                 TCJSendTxt(Index, Screen_Txt);
                 j++;
@@ -325,7 +323,7 @@ int main(void) {
                 case dianliu:
                     switch (RxBuffer1[1]) {
                         case 1:
-                            INA226_Write2Byte_I2C1(addr1, Alert_Reg_limit, dianliu_yuzhi[0] * 8);//ÉÏÏŞ5A
+                            INA226_Write2Byte_I2C1(addr1, Alert_Reg_limit, dianliu_yuzhi[0] * 8);//ä¸Šé™5A
                             break;
                         case 2:
                             INA226_Write2Byte_I2C1(addr2, Alert_Reg_limit, dianliu_yuzhi[1] * 8);
@@ -383,15 +381,24 @@ void DMA1_Channel2_IRQHandler(void)
         DMA_ClearFlag( DMA1_FLAG_TC2);
     }
 }
-void BASIC_TIM_IRQHandler (void)
+void DMA1_Channel3_IRQHandler(void)
 {
-    if ( TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET ) {
+    if (DMA_GetFlagStatus( DMA1_FLAG_TC3)) {
+        TIM_Cmd( TIM3, DISABLE);
+        DMA_Cmd( DMA1_Channel3, DISABLE);
+        DMA_ClearFlag( DMA1_FLAG_TC3);
+    }
+}
+
+void TIM1_UP_IRQHandler (void)
+{
+    if ( TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET ) {
         time++;
         if (time == 2000){
             time = 0;
             chang_an[old_key-1] = 1;
             RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1, DISABLE);
         }
-        TIM_ClearITPendingBit(TIM3 , TIM_FLAG_Update);
+        TIM_ClearITPendingBit(TIM1 , TIM_FLAG_Update);
     }
 }

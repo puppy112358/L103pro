@@ -407,7 +407,7 @@ void INA226_Write2Byte_I2C1(u8 device_addr, u8 reg_addr, u16 reg_data) {
 //
 void INA226_Init(void) {
     IIC_Init(100000);
-//    printf("INA226 INIT begin\r\n");
+    printf("INA226 INIT begin\r\n");
 
     INA226_Write2Byte_I2C1(addr1, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
     INA226_Write2Byte_I2C1(addr2, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
