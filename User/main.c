@@ -26,6 +26,7 @@ int old_key = 0;
 void USART2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
 void DMA1_Channel2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+void DMA1_Channel3_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
 void BASIC_TIM_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
@@ -67,7 +68,7 @@ int main(void) {
 
     USART2_Init();
     TJCScreenInit(USART2);
-//    WS2812Init();
+    WS2812Init();
     INA226_Init();
     kaiguan_Init();
     clear_TJC();
@@ -413,21 +414,21 @@ void USART2_IRQHandler(void) {
     }
 }
 
-//void DMA1_Channel2_IRQHandler(void) {
-//    if (DMA_GetFlagStatus(DMA1_FLAG_TC2)) {
-//        TIM_Cmd(TIM2, DISABLE);
-//        DMA_Cmd(DMA1_Channel2, DISABLE);
-//        DMA_ClearFlag(DMA1_FLAG_TC2);
-//    }
-//}
+void DMA1_Channel2_IRQHandler(void) {
+    if (DMA_GetFlagStatus(DMA1_FLAG_TC2)) {
+        TIM_Cmd(TIM2, DISABLE);
+        DMA_Cmd(DMA1_Channel2, DISABLE);
+        DMA_ClearFlag(DMA1_FLAG_TC2);
+    }
+}
 
-//void DMA1_Channel3_IRQHandler(void) {
-//    if (DMA_GetFlagStatus(DMA1_FLAG_TC3)) {
-//        TIM_Cmd(TIM3, DISABLE);
-//        DMA_Cmd(DMA1_Channel3, DISABLE);
-//        DMA_ClearFlag(DMA1_FLAG_TC3);
-//    }
-//}
+void DMA1_Channel3_IRQHandler(void) {
+    if (DMA_GetFlagStatus(DMA1_FLAG_TC3)) {
+        TIM_Cmd(TIM3, DISABLE);
+        DMA_Cmd(DMA1_Channel3, DISABLE);
+        DMA_ClearFlag(DMA1_FLAG_TC3);
+    }
+}
 
 void TIM1_UP_IRQHandler(void) {
     if (TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET) {
