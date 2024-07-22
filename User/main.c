@@ -71,7 +71,7 @@ int main(void) {
 //  串口屏文本
     char Screen_Txt[20];
     char Index[3];
-    uint8_t led = 0;
+    volatile uint8_t led = 0;
     u16 temp = 0;
 
     int j = 0;
@@ -110,7 +110,7 @@ int main(void) {
         if (chang_an[old_key-1] == 1){
             kaiguanmode[old_key-1] = working;
             chang_an[old_key-1] = 0;
-            set5PixelColor(2,hex2rgb(c));
+            set5PixelColor(old_key-1,hex2rgb(c));
         }
 
 
@@ -119,10 +119,10 @@ int main(void) {
         } else {
             led = 1;
         }
-
+//        Delay_Ms(10);
         GPIO_WriteBit(GPIOA, GPIO_Pin_0, led);
 
-        Delay_Ms(1);
+        Delay_Ms(10);
         //电压监测
 
         if (n++ == 20) {
