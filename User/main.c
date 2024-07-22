@@ -106,7 +106,7 @@ int main(void) {
             }
             old_key = key;
         }
-        n++;
+
         if (chang_an[old_key-1] == 1){
             kaiguanmode[old_key-1] = working;
             chang_an[old_key-1] = 0;
@@ -126,7 +126,8 @@ int main(void) {
 
         Delay_Ms(1);
         //µÁ—πº‡≤‚
-        if (n == 20) {
+
+        if (n++ == 20) {
             n = 0;
             if (INA226_Read2Byte_I2C1(addr1, Bus_V_Reg, &temp) == 0) {
                 Bus_V[0] = temp * (double) 0.00125;
