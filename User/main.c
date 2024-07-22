@@ -22,9 +22,12 @@ int time = 0;
 int chang_an[8] = {0};
 int key = 0;
 int old_key = 0;
+
 void USART2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+
 void DMA1_Channel2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-void BASIC_TIM_IRQHandler (void) __attribute__((interrupt("WCH-Interrupt-fast")));
+
+void BASIC_TIM_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
 
 /* EERPOM DATA ADDRESS Length Selection */
@@ -58,12 +61,13 @@ int main(void) {
     USART_Printf_Init(115200);
     printf("SystemClk:%lu\r\n", SystemCoreClock);
     printf("ChipID:%08lx\r\n", DBGMCU_GetCHIPID());
+    BASIC_TIM_Config();
+
+    BASIC_TIM_NVIC_Config();
 
     USART2_Init();
     TJCScreenInit(USART2);
-    BASIC_TIM_Config();
-    BASIC_TIM_NVIC_Config();
-    WS2812Init();
+//    WS2812Init();
     INA226_Init();
     kaiguan_Init();
     clear_TJC();
@@ -93,93 +97,102 @@ int main(void) {
  * gua 00 00 00 0
  */
     while (1) {
-        c = color__list[n%8];//变色
+        c = color__list[n % 8];//变色
 
         key = ReadKey();
-        if (old_key != key){
+        if (old_key != key) {
             if (key != 0) {
-                RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1, ENABLE);//开始计时
-            } else
-            {
-                RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1,DISABLE);
+                RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1,ENABLE);//开始计时
+            } else {
+                RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1, DISABLE);
                 time = 0;
+                if (chang_an[old_key - 1] == 1) {
+                    kaiguanmode[old_key - 1] = closing;
+                    chang_an[old_key - 1] = 0;
+                    set5PixelColor(old_key - 1, hex2rgb(c));
+                }
             }
             old_key = key;
         }
 
-        if (chang_an[old_key-1] == 1){
-            kaiguanmode[old_key-1] = working;
-            chang_an[old_key-1] = 0;
-            set5PixelColor(old_key-1,hex2rgb(c));
-        }
 
-
-        if (led == 1) {
-            led = 0;
-        } else {
-            led = 1;
-        }
-//        Delay_Ms(10);
-        GPIO_WriteBit(GPIOA, GPIO_Pin_0, led);
-
+//        RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1, DISABLE);
         Delay_Ms(10);
         //电压监测
 
-        if (n++ == 20) {
+        if (n ++ == 20) {
             n = 0;
+            if (led == 1) {
+                led = 0;
+            } else {
+                led = 1;
+            }
+//        Delay_Ms(10);
+            GPIO_WriteBit(GPIOA, GPIO_Pin_0, led);
+
+//            printf("SystemClk:%lu\r\n", SystemCoreClock);
+
             if (INA226_Read2Byte_I2C1(addr1, Bus_V_Reg, &temp) == 0) {
-                Bus_V[0] = temp * (double) 0.00125;
+                Bus_V[0] = temp * (double) 0.001205;
                 if (Bus_V[0] < 1 && kaiguanmode[0] == working) {
                     kaiguanmode[0] = baojing;
+                    TCJSetPic("p0",4);
                     set5PixelColor(0, 0xff, 0, 0);
                 }
             }
             if (INA226_Read2Byte_I2C1(addr2, Bus_V_Reg, &temp) == 0) {
-                Bus_V[1] = temp * (double) 0.00125;
+                Bus_V[1] = temp * (double) 0.001205;
                 if (Bus_V[1] < 1 && kaiguanmode[1] == working) {
                     kaiguanmode[1] = baojing;
+                    TCJSetPic("p1",4);
                     set5PixelColor(1, 0xff, 0, 0);
                 }
             }
             if (INA226_Read2Byte_I2C1(addr3, Bus_V_Reg, &temp) == 0) {
-                Bus_V[2] = temp * (double) 0.00125;
+                Bus_V[2] = temp * (double) 0.001205;
                 if (Bus_V[2] < 1 && kaiguanmode[2] == working) {
                     kaiguanmode[2] = baojing;
+                    TCJSetPic("p2",4);
                     set5PixelColor(2, 0xff, 0, 0);
                 }
             }
             if (INA226_Read2Byte_I2C1(addr4, Bus_V_Reg, &temp) == 0) {
-                Bus_V[3] = temp * (double) 0.00125;
+                Bus_V[3] = temp * (double) 0.001205;
                 if (Bus_V[3] < 1 && kaiguanmode[3] == working) {
                     kaiguanmode[3] = baojing;
+                    TCJSetPic("p3",4);
                     set5PixelColor(3, 0xff, 0, 0);
                 }
             }
             if (INA226_Read2Byte_I2C1(addr5, Bus_V_Reg, &temp) == 0) {
-                Bus_V[4] = temp * (double) 0.00125;
+                Bus_V[4] = temp * (double) 0.001205;
                 if (Bus_V[4] < 1 && kaiguanmode[4] == working) {
                     kaiguanmode[4] = baojing;
+                    TCJSetPic("p4",4);
                     set5PixelColor(4, 0xff, 0, 0);
                 }
             }
             if (INA226_Read2Byte_I2C2(addr6, Bus_V_Reg, &temp) == 0) {
-                Bus_V[5] = temp * (double) 0.00125;
+                Bus_V[5] = temp * (double) 0.001205;
                 if (Bus_V[5] < 1 && kaiguanmode[5] == working) {
                     kaiguanmode[5] = baojing;
+                    TCJSetPic("p5",4);
                     set3PixelColor(0, 0xff, 0, 0);
                 }
             }
             if (INA226_Read2Byte_I2C2(addr7, Bus_V_Reg, &temp) == 0) {
-                Bus_V[6] = temp * (double) 0.00125;
+                Bus_V[6] = temp * (double) 0.001205;
                 if (Bus_V[6] < 1 && kaiguanmode[6] == working) {
                     kaiguanmode[6] = baojing;
+                    TCJSetPic("p6",4);
                     set3PixelColor(1, 0xff, 0, 0);
                 }
             }
             if (INA226_Read2Byte_I2C2(addr8, Bus_V_Reg, &temp) == 0) {
-                Bus_V[7] = temp * (double) 0.00125;
+                Bus_V[7] = temp * (double) 0.001205;
                 if (Bus_V[7] < 1 && kaiguanmode[7] == working) {
                     kaiguanmode[7] = baojing;
+                    TCJSetPic("p7",4);
                     set3PixelColor(2, 0xff, 0, 0);
                 }
             }
@@ -194,56 +207,56 @@ int main(void) {
             //电流监测
             if (INA226_Read2Byte_I2C1(addr1, Current_Reg, &temp) == 0) {
                 if (temp < 65000) {
-                    current[0] = temp * 0.0002;
+                    current[0] = temp * 0.0001916;
                 } else {
                     current[0] = 0;
                 }
             }
             if (INA226_Read2Byte_I2C1(addr2, Current_Reg, &temp) == 0) {
                 if (temp < 65000) {
-                    current[1] = temp * 0.0002;
+                    current[1] = temp * 0.0001916;
                 } else {
                     current[1] = 0;
                 }
             }
             if (INA226_Read2Byte_I2C1(addr3, Current_Reg, &temp) == 0) {
                 if (temp < 65000) {
-                    current[2] = temp * 0.0002;
+                    current[2] = temp * 0.0001916;
                 } else {
                     current[2] = 0;
                 }
             }
             if (INA226_Read2Byte_I2C1(addr4, Current_Reg, &temp) == 0) {
                 if (temp < 65000) {
-                    current[3] = temp * 0.0002;
+                    current[3] = temp * 0.0001916;
                 } else {
                     current[3] = 0;
                 }
             }
             if (INA226_Read2Byte_I2C1(addr5, Current_Reg, &temp) == 0) {
                 if (temp < 65000) {
-                    current[4] = temp * 0.0002;
+                    current[4] = temp * 0.0001916;
                 } else {
                     current[4] = 0;
                 }
             }
             if (INA226_Read2Byte_I2C2(addr6, Current_Reg, &temp) == 0) {
                 if (temp < 65000) {
-                    current[5] = temp * 0.0002;
+                    current[5] = temp * 0.0001916;
                 } else {
                     current[5] = 0;
                 }
             }
             if (INA226_Read2Byte_I2C2(addr7, Current_Reg, &temp) == 0) {
                 if (temp < 65000) {
-                    current[6] = temp * 0.0002;
+                    current[6] = temp * 0.0001916;
                 } else {
                     current[6] = 0;
                 }
             }
             if (INA226_Read2Byte_I2C2(addr8, Current_Reg, &temp) == 0) {
                 if (temp < 65000) {
-                    current[7] = temp * 0.0002;
+                    current[7] = temp * 0.0001916;
                 } else {
                     current[7] = 0;
                 }
@@ -274,86 +287,113 @@ int main(void) {
                 j++;
             }
         }
+        uint16_t t;
         if (RxBuffer1[0]) {
             switch (RxBuffer1[0]) {
                 case kaiguan:
                     switch (RxBuffer1[1]) {
-                        case 1:
-                            kaiguan1
+                        case 1:kaiguan1
                             kaiguanmode[0] = RxBuffer1[2];
-                            set5PixelColor(1, hex2rgb(c&RxBuffer1[2]));
+                            set5PixelColor(1, hex2rgb(c & RxBuffer1[2]));
+                            break;
+                        case 2:kaiguan2
+                            kaiguanmode[1] = RxBuffer1[2];
+                            set5PixelColor(2, hex2rgb(c & RxBuffer1[2]));
+                            break;
+                        case 3:kaiguan3
+                            kaiguanmode[2] = RxBuffer1[2];
+                            set5PixelColor(3, hex2rgb(c & RxBuffer1[2]));
+                            break;
+                        case 4:kaiguan4
+                            kaiguanmode[3] = RxBuffer1[2];
+                            set5PixelColor(4, hex2rgb(c & RxBuffer1[2]));
+                            break;
+                        case 5:kaiguan5
+                            kaiguanmode[4] = RxBuffer1[2];
+                            set5PixelColor(5, hex2rgb(c & RxBuffer1[2]));
+                            break;
+                        case 6:kaiguan6
+                            kaiguanmode[5] = RxBuffer1[2];
+                            set3PixelColor(1, hex2rgb(c & RxBuffer1[2]));
+                            break;
+                        case 7:kaiguan7
+                            kaiguanmode[6] = RxBuffer1[2];
+                            set3PixelColor(2, hex2rgb(c & RxBuffer1[2]));
+                            break;
+                        case 8:kaiguan8
+                            kaiguanmode[7] = RxBuffer1[2];
+                            set3PixelColor(3, hex2rgb(c & RxBuffer1[2]));
+                            break;
+                    }
+                    break;
+                case not_baojing:
+                    switch (RxBuffer1[1]) {
+                        case 1:
+                            INA226_Read2Byte_I2C1(addr1,Mask_En_Reg,&t);
+                            GPIO_WriteBit(GPIOB, GPIO_Pin_12, 0);
+                            kaiguanmode[0]=closing;
                             break;
                         case 2:
-                            kaiguan2
-                            kaiguanmode[1] = RxBuffer1[2];
-                            set5PixelColor(2,hex2rgb(c&RxBuffer1[2]));
+                            INA226_Read2Byte_I2C1(addr2,Mask_En_Reg,&t);
+                            GPIO_WriteBit(GPIOB, GPIO_Pin_13,0);
+                            kaiguanmode[1]=closing;
                             break;
                         case 3:
-                            kaiguan3
-                            kaiguanmode[2] = RxBuffer1[2];
-                            set5PixelColor(3,hex2rgb(c&RxBuffer1[2]));
+                            INA226_Read2Byte_I2C1(addr3,Mask_En_Reg,&t);
+                            GPIO_WriteBit(GPIOB, GPIO_Pin_14, 0);
+                            kaiguanmode[2]=closing;
                             break;
                         case 4:
-                            kaiguan4
-                            kaiguanmode[3] = RxBuffer1[2];
-                            set5PixelColor(4,hex2rgb(c&RxBuffer1[2]));
+                            INA226_Read2Byte_I2C1(addr4,Mask_En_Reg,&t);
+                            GPIO_WriteBit(GPIOB, GPIO_Pin_15, 0);
+                            kaiguanmode[3]=closing;
                             break;
                         case 5:
-                            kaiguan5
-                            kaiguanmode[4] = RxBuffer1[2];
-                            set5PixelColor(5,hex2rgb(c&RxBuffer1[2]));
+                            INA226_Read2Byte_I2C1(addr5,Mask_En_Reg,&t);
+                            GPIO_WriteBit(GPIOA, GPIO_Pin_8, 0);
+                            kaiguanmode[4]=closing;
                             break;
                         case 6:
-                            kaiguan6
-                            kaiguanmode[5] = RxBuffer1[2];
-                            set3PixelColor(1,hex2rgb(c&RxBuffer1[2]));
+                            INA226_Read2Byte_I2C2(addr6,Mask_En_Reg,&t);
+                            GPIO_WriteBit(GPIOA, GPIO_Pin_11, 0);
+                            kaiguanmode[5]=closing;
                             break;
                         case 7:
-                            kaiguan7
-                            kaiguanmode[6] = RxBuffer1[2];
-                            set3PixelColor(2,hex2rgb(c&RxBuffer1[2]));
+                            INA226_Read2Byte_I2C2(addr7,Mask_En_Reg,&t);
+                            GPIO_WriteBit(GPIOA, GPIO_Pin_12, 0);
+                            kaiguanmode[6]=closing;
                             break;
                         case 8:
-                            kaiguan8
-                            kaiguanmode[7] = RxBuffer1[2];
-                            set3PixelColor(3,hex2rgb(c&RxBuffer1[2]));
+                            INA226_Read2Byte_I2C2(addr8,Mask_En_Reg,&t);
+                            GPIO_WriteBit(GPIOA, GPIO_Pin_15, 0);
+                            kaiguanmode[7]=closing;
                             break;
                     }
                     break;
                 case dianliu:
                     switch (RxBuffer1[1]) {
-                        case 1:
-                            INA226_Write2Byte_I2C1(addr1, Alert_Reg_limit, dianliu_yuzhi[0] * 8);//上限5A
+                        case 1:INA226_Write2Byte_I2C1(addr1, Alert_Reg_limit, dianliu_yuzhi[0] * 800);//上限5A
                             break;
-                        case 2:
-                            INA226_Write2Byte_I2C1(addr2, Alert_Reg_limit, dianliu_yuzhi[1] * 8);
+                        case 2:INA226_Write2Byte_I2C1(addr2, Alert_Reg_limit, dianliu_yuzhi[1] * 800);
                             break;
-                        case 3:
-                            INA226_Write2Byte_I2C1(addr3, Alert_Reg_limit, dianliu_yuzhi[2] * 8);
+                        case 3:INA226_Write2Byte_I2C1(addr3, Alert_Reg_limit, dianliu_yuzhi[2] * 800);
                             break;
-                        case 4:
-                            INA226_Write2Byte_I2C1(addr4, Alert_Reg_limit, dianliu_yuzhi[3] * 8);
+                        case 4:INA226_Write2Byte_I2C1(addr4, Alert_Reg_limit, dianliu_yuzhi[3] * 800);
                             break;
-                        case 5:
-                            INA226_Write2Byte_I2C1(addr5, Alert_Reg_limit, dianliu_yuzhi[4] * 8);
+                        case 5:INA226_Write2Byte_I2C1(addr5, Alert_Reg_limit, dianliu_yuzhi[4] * 800);
                             break;
-                        case 6:
-                            INA226_Write2Byte_I2C2(addr6, Alert_Reg_limit, dianliu_yuzhi[5] * 8);
+                        case 6:INA226_Write2Byte_I2C2(addr6, Alert_Reg_limit, dianliu_yuzhi[5] * 800);
                             break;
-                        case 7:
-                            INA226_Write2Byte_I2C2(addr7, Alert_Reg_limit, dianliu_yuzhi[6] * 8);
+                        case 7:INA226_Write2Byte_I2C2(addr7, Alert_Reg_limit, dianliu_yuzhi[6] * 800);
                             break;
-                        case 8:
-                            INA226_Write2Byte_I2C2(addr8, Alert_Reg_limit, dianliu_yuzhi[7] * 8);
+                        case 8:INA226_Write2Byte_I2C2(addr8, Alert_Reg_limit, dianliu_yuzhi[7] * 800);
                             break;
-                        default:
-                            break;
+                        default:break;
                     }
                     dianliu_yuzhi[RxBuffer1[1] - 1] = RxBuffer1[2];
-                    dianliu_yuzhi[RxBuffer1[1] - 1] = dianliu_yuzhi[RxBuffer1[1] - 1] + (RxBuffer1[3] << 4);
+                    dianliu_yuzhi[RxBuffer1[1] - 1] = dianliu_yuzhi[RxBuffer1[1] - 1] | (RxBuffer1[3] << 8);
                     break;
-                default:
-                    break;
+                default:break;
             }
             memset(RxBuffer1, 0, sizeof(RxBuffer1));
             RxCnt1 = 0;
@@ -373,32 +413,30 @@ void USART2_IRQHandler(void) {
     }
 }
 
-void DMA1_Channel2_IRQHandler(void)
-{
-    if (DMA_GetFlagStatus( DMA1_FLAG_TC2)) {
-        TIM_Cmd( TIM2, DISABLE);
-        DMA_Cmd( DMA1_Channel2, DISABLE);
-        DMA_ClearFlag( DMA1_FLAG_TC2);
-    }
-}
-void DMA1_Channel3_IRQHandler(void)
-{
-    if (DMA_GetFlagStatus( DMA1_FLAG_TC3)) {
-        TIM_Cmd( TIM3, DISABLE);
-        DMA_Cmd( DMA1_Channel3, DISABLE);
-        DMA_ClearFlag( DMA1_FLAG_TC3);
-    }
-}
+//void DMA1_Channel2_IRQHandler(void) {
+//    if (DMA_GetFlagStatus(DMA1_FLAG_TC2)) {
+//        TIM_Cmd(TIM2, DISABLE);
+//        DMA_Cmd(DMA1_Channel2, DISABLE);
+//        DMA_ClearFlag(DMA1_FLAG_TC2);
+//    }
+//}
 
-void TIM1_UP_IRQHandler (void)
-{
-    if ( TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET ) {
+//void DMA1_Channel3_IRQHandler(void) {
+//    if (DMA_GetFlagStatus(DMA1_FLAG_TC3)) {
+//        TIM_Cmd(TIM3, DISABLE);
+//        DMA_Cmd(DMA1_Channel3, DISABLE);
+//        DMA_ClearFlag(DMA1_FLAG_TC3);
+//    }
+//}
+
+void TIM1_UP_IRQHandler(void) {
+    if (TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET) {
         time++;
-        if (time == 2000){
+        if (time == 2000) {
             time = 0;
-            chang_an[old_key-1] = 1;
+            chang_an[old_key - 1] = 1;
             RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1, DISABLE);
         }
-        TIM_ClearITPendingBit(TIM1 , TIM_FLAG_Update);
+        TIM_ClearITPendingBit(TIM1, TIM_FLAG_Update);
     }
 }

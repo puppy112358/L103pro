@@ -9,7 +9,7 @@
 enum gongneng
 {
     kaiguan = 1,
-    dianya = 2,
+    not_baojing = 2,
     dianliu = 3,
 };
 void USART_Send(USART_TypeDef *_UART,u8 *data, u8 len);
