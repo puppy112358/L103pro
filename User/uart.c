@@ -1,4 +1,34 @@
 #include "uart.h"
+#include "TJCScreen.h"
+//串口屏清屏
+void clear_TJC(){
+    char Screen_Txt[20];
+    char Index[3];
+    // 电压显示初始化
+    for (int i = 1; i < 22; i += 3) {
+        sprintf(Screen_Txt, "电压：%.4fV",0.0);
+        sprintf(Index, "t%d", i);
+        TCJSendTxt(Index, Screen_Txt);
+    }
+    // 电流显示初始化
+    for (int i = 0; i < 21; i += 3) {
+        sprintf(Screen_Txt, "电流：%.4fA", 0.0);
+        sprintf(Index, "t%d", i);
+        TCJSendTxt(Index, Screen_Txt);
+    }
+    // 功耗显示初始化
+    for (int i = 2; i < 23; i += 3) {
+        sprintf(Screen_Txt, "功耗：%.4fW", 0.0);
+        sprintf(Index, "t%d", i);
+        TCJSendTxt(Index, Screen_Txt);
+    }
+    // 图片显示初始化
+    for (int i = 0; i < 7; i++) {
+        sprintf(Index, "p%d", i);
+        TCJSetPic(Index, i);
+    }
+
+}
 /*******************************************************************************
   * @函数名称	USART_Send
   * @函数说明   发送信息
@@ -17,13 +47,13 @@ void USART_Send(USART_TypeDef *_UART,u8 *data, u8 len)
     }
 }
 /*********************************************************************
- * @fn      USARTx_CFG
+ * @fn      USART2_Init
  *
  * @brief   Initializes the USART2  peripheral.
  *
  * @return  none
  */
-void USARTx_CFG(void)
+void USART2_Init(void)
 {
     GPIO_InitTypeDef  GPIO_InitStructure = {0};
     USART_InitTypeDef USART_InitStructure = {0};

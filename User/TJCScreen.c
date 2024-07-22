@@ -18,6 +18,13 @@ void TCJSendEnd() {
     USART_Send(gHuart, (uint8_t *) "\xff\xff\xff", 3);
 }
 
+void TCJSetPic(char *name, int id) {
+    char tmp[30];
+    sprintf(tmp, "%s.pic=%d", name, id);
+    USART_Send(gHuart, (uint8_t *) tmp, strlen(tmp));
+    TCJSendEnd();
+}
+
 void TCJSendValue(char *name, int value) {
     char tmp[30];
     sprintf(tmp, "%s.val=%d", name, value);

@@ -404,10 +404,10 @@ void INA226_Write2Byte_I2C1(u8 device_addr, u8 reg_addr, u16 reg_data) {
     I2C_GenerateSTOP(I2C1, ENABLE);
     Delay_Ms(5);
 }
-
+//
 void INA226_Init(void) {
     IIC_Init(100000);
-    printf("INA226 INIT begin\r\n");
+//    printf("INA226 INIT begin\r\n");
 
     INA226_Write2Byte_I2C1(addr1, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
     INA226_Write2Byte_I2C1(addr2, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
@@ -435,6 +435,15 @@ void INA226_Init(void) {
     INA226_Write2Byte_I2C2(addr7, Mask_En_Reg, 0x8000);
     INA226_Write2Byte_I2C2(addr8, Mask_En_Reg, 0x8000);
 
+
+    INA226_Write2Byte_I2C1(addr1, Alert_Reg_limit , 0x960);
+    INA226_Write2Byte_I2C1(addr2, Alert_Reg_limit , 0x960);
+    INA226_Write2Byte_I2C1(addr3, Alert_Reg_limit , 0x960);
+    INA226_Write2Byte_I2C1(addr4, Alert_Reg_limit , 0x960);
+    INA226_Write2Byte_I2C1(addr5, Alert_Reg_limit , 0x960);
+    INA226_Write2Byte_I2C2(addr6, Alert_Reg_limit , 0x960);
+    INA226_Write2Byte_I2C2(addr7, Alert_Reg_limit , 0x960);
+    INA226_Write2Byte_I2C2(addr8, Alert_Reg_limit , 0x960);
     Delay_Ms(10);
     printf("INA226 INIT end\r\n");
 }

@@ -11,6 +11,8 @@ void TJCScreenInit(USART_TypeDef *huart);
 
 void TCJSendEnd();
 
+void TCJSetPic(char *name, int id);
+
 void TCJSendValue(char *name, int value);
 
 void TCJSendTxt(char *name, char *value);

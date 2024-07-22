@@ -13,6 +13,7 @@ enum gongneng
     dianliu = 3,
 };
 void USART_Send(USART_TypeDef *_UART,u8 *data, u8 len);
-void USARTx_CFG(void);
+void USART2_Init(void);
+void clear_TJC();
 
 #endif //L103PRO_UART_H
