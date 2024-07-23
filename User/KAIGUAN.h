@@ -32,7 +32,7 @@ enum working_mode
 
 void kaiguan_Init();
 
-void BASIC_TIM_Config(void);
+void TIM_Config(void);
 
 void BASIC_TIM_NVIC_Config(void);
 

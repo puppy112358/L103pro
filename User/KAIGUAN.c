@@ -73,7 +73,7 @@ int ReadKey(){
     }
     return 0;
 }
-void BASIC_TIM_Config(void)
+void TIM_Config(void)
 {
     TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 

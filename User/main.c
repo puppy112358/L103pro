@@ -31,8 +31,6 @@ void DMA1_Channel2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast
 
 void DMA1_Channel3_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
-void BASIC_TIM_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
-
 
 /* EERPOM DATA ADDRESS Length Selection */
 #define Address_Lenth   Address_8bit
@@ -66,7 +64,7 @@ int main(void)
     USART_Printf_Init(115200);
     printf("SystemClk:%lu\r\n", SystemCoreClock);
     printf("ChipID:%08lx\r\n", DBGMCU_GetCHIPID());
-    BASIC_TIM_Config();
+    TIM_Config();
 
     BASIC_TIM_NVIC_Config();
 
@@ -112,6 +110,8 @@ int main(void)
                 if (isLongTouch)
                 {
                     isLongTouch = 0;
+                    sprintf(Screen_Txt,"p%d",old_key-1);
+                    TCJSetPic(Screen_Txt,0);
                 } else
                 {
                     COM_Mode[old_key - 1] = !COM_Mode[old_key - 1];
@@ -119,24 +119,37 @@ int main(void)
                     {
                         case 1:
                             kaiguan1;
+                            TCJSetPic("p0",COM_Mode[old_key-1]);
                             break;
                         case 2:
                             kaiguan2;
+                            TCJSetPic("p1",COM_Mode[old_key-1]);
+
                             break;
                         case 3:
                             kaiguan3;
+                            TCJSetPic("p2",COM_Mode[old_key-1]);
+
                             break;
                         case 4:
                             kaiguan4;
+                            TCJSetPic("p3",COM_Mode[old_key-1]);
+
                             break;
                         case 5:
                             kaiguan5;
+                            TCJSetPic("p4",COM_Mode[old_key-1]);
+
                             break;
                         case 6:
                             kaiguan6;
+                            TCJSetPic("p5",COM_Mode[old_key-1]);
+
                             break;
                         case 7:
                             kaiguan7;
+                            TCJSetPic("p6",COM_Mode[old_key-1]);
+
                             break;
                         case 8:
                             kaiguan8;
@@ -164,13 +177,15 @@ int main(void)
                 led = 1;
             }
             GPIO_WriteBit(GPIOA, GPIO_Pin_0, led);
-
+int tt;
             if (INA226_Read2Byte_I2C1(addr1, Bus_V_Reg, &temp) == 0)
             {
                 Bus_V[0] = temp * (double) 0.00125003;
                 if (Bus_V[0] < 1 && COM_Mode[0] == WORKING)
                 {
                     COM_Mode[0] = ALARMING;
+                    kaiguan1;
+                    INA226_Read2Byte_I2C1(addr1, Mask_En_Reg, &tt);
                     TCJSetPic("p0", 4);
                 }
             }
@@ -180,6 +195,8 @@ int main(void)
                 if (Bus_V[1] < 1 && COM_Mode[1] == WORKING)
                 {
                     COM_Mode[1] = ALARMING;
+                    INA226_Read2Byte_I2C1(addr2, Mask_En_Reg, &tt);
+                    kaiguan2;
                     TCJSetPic("p1", 4);
                 }
             }
@@ -189,6 +206,8 @@ int main(void)
                 if (Bus_V[2] < 1 && COM_Mode[2] == WORKING)
                 {
                     COM_Mode[2] = ALARMING;
+                    INA226_Read2Byte_I2C1(addr3, Mask_En_Reg, &tt);
+                    kaiguan3;
                     TCJSetPic("p2", 4);
                 }
             }
@@ -198,6 +217,8 @@ int main(void)
                 if (Bus_V[3] < 1 && COM_Mode[3] == WORKING)
                 {
                     COM_Mode[3] = ALARMING;
+                    INA226_Read2Byte_I2C1(addr4, Mask_En_Reg, &tt);
+                    kaiguan4;
                     TCJSetPic("p3", 4);
                 }
             }
@@ -207,6 +228,8 @@ int main(void)
                 if (Bus_V[4] < 1 && COM_Mode[4] == WORKING)
                 {
                     COM_Mode[4] = ALARMING;
+                    INA226_Read2Byte_I2C1(addr5, Mask_En_Reg, &tt);
+                    kaiguan5;
                     TCJSetPic("p4", 4);
                 }
             }
@@ -216,6 +239,8 @@ int main(void)
                 if (Bus_V[5] < 1 && COM_Mode[5] == WORKING)
                 {
                     COM_Mode[5] = ALARMING;
+                    INA226_Read2Byte_I2C2(addr6, Mask_En_Reg, &tt);
+                    kaiguan6;
                     TCJSetPic("p5", 4);
                 }
             }
@@ -225,6 +250,8 @@ int main(void)
                 if (Bus_V[6] < 1 && COM_Mode[6] == WORKING)
                 {
                     COM_Mode[6] = ALARMING;
+                    INA226_Read2Byte_I2C2(addr7, Mask_En_Reg, &tt);
+                    kaiguan7;
                     TCJSetPic("p6", 4);
                 }
             }
@@ -234,6 +261,8 @@ int main(void)
                 if (Bus_V[7] < 1 && COM_Mode[7] == WORKING)
                 {
                     COM_Mode[7] = ALARMING;
+                    INA226_Read2Byte_I2C2(addr8, Mask_En_Reg, &tt);
+                    kaiguan8;
 //                    TCJSetPic("p7",4);      第八个端口
                 }
             }
