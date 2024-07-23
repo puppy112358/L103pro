@@ -20,9 +20,10 @@ float current[8] = {0};
 float power[8] = {0};
 int COM_Mode[8] = {0};
 int time = 0;
-int LongTouch[8] = {0};
+//int LongTouch[8] = {0};
 int key = 0;
 int old_key = 0;
+char isLongTouch = 0;
 
 void USART2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
@@ -91,19 +92,28 @@ int main(void)
         if (old_key != key)
         {
             if (key != 0)
-            {//按键按下开始计时
-                RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1, ENABLE);//开始计时
+            {
+                if (COM_Mode[key - 1] == ALARMING)//只有报警状态下有资格进
+                {
+                    time = 0;
+                    RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1, ENABLE);//开始计时
+                }
             } else
-            {//按键松开
-                RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1, DISABLE);
-                time = 0;
-                if (LongTouch[old_key - 1] == 1 && COM_Mode[old_key - 1] == ALARMING)
-                {//长按
-                    COM_Mode[old_key - 1] = CLOSING;
-                    LongTouch[old_key - 1] = 0;
-                    /// TODO: 发给串口屏关闭警告
+            {//松开就进
+//                RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1, DISABLE);
+//                time = 0;
+//                if (LongTouch[old_key - 1] == 1 && COM_Mode[old_key - 1] == ALARMING)
+//                {//长按
+//                    COM_Mode[old_key - 1] = CLOSING;
+//                    LongTouch[old_key - 1] = 0;
+//                    /// TODO: 发给串口屏关闭警告
+//                } else
+//                {//短按
+                if (isLongTouch)
+                {
+                    isLongTouch = 0;
                 } else
-                {//短按
+                {
                     COM_Mode[old_key - 1] = !COM_Mode[old_key - 1];
                     switch (old_key)
                     {
@@ -132,9 +142,10 @@ int main(void)
                             kaiguan8;
                             break;
                     }
-
-                    ///  TODO:  发给串口屏开关
                 }
+
+                ///  TODO:  发给串口屏开关
+
             }
             old_key = key;
         }
@@ -554,7 +565,9 @@ void TIM1_UP_IRQHandler(void)
         if (time == 2000)
         {
             time = 0;
-            LongTouch[old_key - 1] = 1;
+            isLongTouch = 1;
+//            LongTouch[old_key - 1] = 1;
+            COM_Mode[old_key - 1] = CLOSING;
             RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1, DISABLE);
         }
 
