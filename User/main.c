@@ -543,10 +543,13 @@ void DMA1_Channel3_IRQHandler(void)
     }
 }
 
+void TIM1_UP_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
+
 void TIM1_UP_IRQHandler(void)
 {
     if (TIM_GetITStatus(TIM1, TIM_IT_Update) != RESET)
     {
+        TIM_ClearITPendingBit(TIM1, TIM_IT_Update);
         time++;
         if (time == 2000)
         {
@@ -554,7 +557,7 @@ void TIM1_UP_IRQHandler(void)
             LongTouch[old_key - 1] = 1;
             RCC_PB2PeriphClockCmd(RCC_PB2Periph_TIM1, DISABLE);
         }
-        TIM_ClearITPendingBit(TIM1, TIM_FLAG_Update);
+
     }
 }
 
