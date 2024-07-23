@@ -23,10 +23,10 @@ void clear_TJC(){
         TCJSendTxt(Index, Screen_Txt);
     }
     // 图片显示初始化
-//    for (int i = 0; i < 7; i++) {
-//        sprintf(Index, "p%d", i);
-//        TCJSetPic(Index, i);
-//    }
+    for (int i = 0; i < 7; i++) {
+        sprintf(Index, "p%d", i);
+        TCJSetPic(Index, 0);
+    }
 
 }
 /*******************************************************************************

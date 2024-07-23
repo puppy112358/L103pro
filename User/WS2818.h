@@ -18,6 +18,9 @@
 #define TIM2_CH2CVR_ADDRESS    0x40000038
 #define TIM3_CH2CVR_ADDRESS    0x40000438
 
+#define kai_color 0x00FF00//green
+#define close_color 0x00
+#define baojing_color 0xFF00
 
 void TIM2_PWMOut_Init(u16 arr, u16 psc, u16 ccp);
 void TIM3_PWMOut_Init(u16 arr, u16 psc, u16 ccp);

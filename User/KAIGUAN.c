@@ -38,29 +38,37 @@ void kaiguan_Init(){
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_IPU;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOB, &GPIO_InitStructure);
+    GPIO_WriteBit(GPIOB, GPIO_Pin_12, 0);
+    GPIO_WriteBit(GPIOB, GPIO_Pin_13, 0);
+    GPIO_WriteBit(GPIOB, GPIO_Pin_14, 0);
+    GPIO_WriteBit(GPIOB, GPIO_Pin_15, 0);
+    GPIO_WriteBit(GPIOA, GPIO_Pin_8,  0);
+    GPIO_WriteBit(GPIOA, GPIO_Pin_11, 0);
+    GPIO_WriteBit(GPIOA, GPIO_Pin_12, 0);
+    GPIO_WriteBit(GPIOA, GPIO_Pin_15, 0);
 }
 int ReadKey(){
-    if (jianpan1 == 1){
+    if (jianpan1 == 0){
         return 1;
-    } else if (jianpan2==1){
+    } else if (jianpan2==0){
         return 2;
     }
-    else if (jianpan3 == 1){
+    else if (jianpan3 == 0){
         return 3;
     }
-    else if (jianpan4 == 1){
+    else if (jianpan4 == 0){
         return 4;
     }
-    else if (jianpan5 == 1){
+    else if (jianpan5 == 0){
         return 5;
     }
-    else if (jianpan6 == 1){
+    else if (jianpan6 == 0){
         return 6;
     }
-    else if (jianpan7 == 1){
+    else if (jianpan7 == 0){
         return 7;
     }
-    else if (jianpan8 == 1){
+    else if (jianpan8 == 0){
         return 8;
     }
     return 0;

@@ -26,6 +26,7 @@ void WS2812Init(){
     }
 
 }
+
 void set5PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b)
 {
     int i = 0, j = id * 24u;
@@ -58,6 +59,12 @@ void set5PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b)
         j++;
     }
 }
+
+///
+/// \param id
+/// \param r
+/// \param g
+/// \param b
 void set3PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b)
 {
     int i = 0, j = id * 24u;
