@@ -18,12 +18,12 @@ void WS2812Init(){
     TIM_Cmd(TIM3, ENABLE);
     TIM_CtrlPWMOutputs(TIM2, ENABLE);
     TIM_CtrlPWMOutputs(TIM3, ENABLE);
-//    for (int i = 0; i < 5; i++) {
-//        set5PixelColor(i, 0, 0, 0);
-//    }
-//    for (int i = 0; i < 3; i++) {
-//        set3PixelColor(i, 0, 0, 0);
-//    }
+    for (int i = 0; i < 5; i++) {
+        set5PixelColor(i, 0, 0, 0);
+    }
+    for (int i = 0; i < 3; i++) {
+        set3PixelColor(i, 0, 0, 0);
+    }
 
 }
 void set5PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b)

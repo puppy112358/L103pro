@@ -98,7 +98,10 @@ int main(void) {
  * gua 00 00 00 0
  */
     while (1) {
-        c = color__list[n % 8];//变色
+        c = color__list[n % 7];//变色
+//        set3PixelColor(0, 255,0,0);
+        set3PixelColor(2, 102,139,139);
+//        set3PixelColor(2, 176,196,222);
 
         key = ReadKey();
         if (old_key != key) {
@@ -295,35 +298,35 @@ int main(void) {
                     switch (RxBuffer1[1]) {
                         case 1:kaiguan1
                             kaiguanmode[0] = RxBuffer1[2];
-                            set5PixelColor(1, hex2rgb(c & RxBuffer1[2]));
+                            set5PixelColor(1, 0,255 & RxBuffer1[2],0);
                             break;
                         case 2:kaiguan2
                             kaiguanmode[1] = RxBuffer1[2];
-                            set5PixelColor(2, hex2rgb(c & RxBuffer1[2]));
+                            set5PixelColor(2, 0,255 & RxBuffer1[2],0);
                             break;
                         case 3:kaiguan3
                             kaiguanmode[2] = RxBuffer1[2];
-                            set5PixelColor(3, hex2rgb(c & RxBuffer1[2]));
+                            set5PixelColor(3, 0,255 & RxBuffer1[2],0);
                             break;
                         case 4:kaiguan4
                             kaiguanmode[3] = RxBuffer1[2];
-                            set5PixelColor(4, hex2rgb(c & RxBuffer1[2]));
+                            set5PixelColor(4, 0,255 & RxBuffer1[2],0);
                             break;
                         case 5:kaiguan5
                             kaiguanmode[4] = RxBuffer1[2];
-                            set5PixelColor(5, hex2rgb(c & RxBuffer1[2]));
+                            set5PixelColor(5, 0,255 & RxBuffer1[2],0);
                             break;
                         case 6:kaiguan6
                             kaiguanmode[5] = RxBuffer1[2];
-                            set3PixelColor(1, hex2rgb(c & RxBuffer1[2]));
+                            set3PixelColor(0, 0,255 & RxBuffer1[2],0);
                             break;
                         case 7:kaiguan7
                             kaiguanmode[6] = RxBuffer1[2];
-                            set3PixelColor(2, hex2rgb(c & RxBuffer1[2]));
+                            set3PixelColor(1, 0,255 & RxBuffer1[2],0);
                             break;
                         case 8:kaiguan8
                             kaiguanmode[7] = RxBuffer1[2];
-                            set3PixelColor(3, hex2rgb(c & RxBuffer1[2]));
+                            set3PixelColor(2, 0,255 & RxBuffer1[2],0);
                             break;
                     }
                     break;
