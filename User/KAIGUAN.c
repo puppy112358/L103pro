@@ -45,7 +45,7 @@ void kaiguan_Init(){
     GPIO_WriteBit(GPIOA, GPIO_Pin_8,  0);
     GPIO_WriteBit(GPIOA, GPIO_Pin_11, 0);
     GPIO_WriteBit(GPIOA, GPIO_Pin_12, 0);
-    GPIO_WriteBit(GPIOA, GPIO_Pin_15, 0);
+    GPIO_WriteBit(GPIOA, GPIO_Pin_15, 1);
 }
 int ReadKey(){
     if (jianpan1 == 0){
@@ -73,7 +73,7 @@ int ReadKey(){
     }
     return 0;
 }
-void TIM_Config(void)
+void TIM1_Config(void)
 {
     TIM_TimeBaseInitTypeDef  TIM_TimeBaseStructure;
 
@@ -112,7 +112,7 @@ void TIM_Config(void)
 }
 
 // 中断优先级配置
-void BASIC_TIM_NVIC_Config(void)
+void TIM1_NVIC_Config(void)
 {
     NVIC_InitTypeDef NVIC_InitStructure;
     // 设置中断组为0

@@ -32,9 +32,9 @@ enum working_mode
 
 void kaiguan_Init();
 
-void TIM_Config(void);
+void TIM1_Config(void);
 
-void BASIC_TIM_NVIC_Config(void);
+void TIM1_NVIC_Config(void);
 
 int ReadKey();
 

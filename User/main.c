@@ -20,7 +20,6 @@ float current[8] = {0};
 float power[8] = {0};
 int COM_Mode[8] = {0};
 int time = 0;
-//int LongTouch[8] = {0};
 int key = 0;
 int old_key = 0;
 char isLongTouch = 0;
@@ -64,9 +63,9 @@ int main(void)
     USART_Printf_Init(115200);
     printf("SystemClk:%lu\r\n", SystemCoreClock);
     printf("ChipID:%08lx\r\n", DBGMCU_GetCHIPID());
-    TIM_Config();
 
-    BASIC_TIM_NVIC_Config();
+    TIM1_Config();
+    TIM1_NVIC_Config();
 
     USART2_Init();
     TJCScreenInit(USART2);
@@ -83,6 +82,8 @@ int main(void)
 
     int j = 0;
     int n = 0;//循环20次刷新一次数据
+
+    COM_Mode[7] = WORKING;
     while (1)
     {
 
@@ -268,7 +269,7 @@ int tt;
             }
             // 更新串口屏电压数据
             int j = 0;
-            for (int i = 1; i < 22; i += 3)
+            for (int i = 1; i <= 22; i += 3)
             {
                 sprintf(Screen_Txt, "电压：%.4fV", Bus_V[j]);
                 sprintf(Index, "t%d", i);
@@ -358,7 +359,7 @@ int tt;
             }
             // 更新串口屏电流数据
             j = 0;
-            for (int i = 0; i < 21; i += 3)
+            for (int i = 0; i <= 21; i += 3)
             {
                 sprintf(Screen_Txt, "电流：%.4fA", current[j]);
                 sprintf(Index, "t%d", i);
@@ -376,7 +377,7 @@ int tt;
             power[7] = Bus_V[7] * current[7];
             // 更新串口屏功耗数据
             j = 0;
-            for (int i = 2; i < 23; i += 3)
+            for (int i = 2; i <= 23; i += 3)
             {
                 sprintf(Screen_Txt, "功耗：%.4fW", power[j]);
                 sprintf(Index, "t%d", i);

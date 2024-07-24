@@ -24,6 +24,7 @@ void WS2812Init(){
     for (int i = 0; i < 3; i++) {
         set3PixelColor(i, 0, 0, 0);
     }
+    set3PixelColor(2,0,255,0);
 
 }
 
