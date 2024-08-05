@@ -409,50 +409,50 @@ void INA226_Init(void) {
     IIC_Init(100000);
     printf("INA226 INIT begin\r\n");
 
-    INA226_Write2Byte_I2C1(addr1, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
-    INA226_Write2Byte_I2C1(addr2, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
+    INA226_Write2Byte_I2C2(addr1, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
+    INA226_Write2Byte_I2C2(addr2, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
     INA226_Write2Byte_I2C1(addr3, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
     INA226_Write2Byte_I2C1(addr4, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
     INA226_Write2Byte_I2C1(addr5, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
     INA226_Write2Byte_I2C2(addr6, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
-    INA226_Write2Byte_I2C2(addr7, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
-    INA226_Write2Byte_I2C2(addr8, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
-    INA226_Write2Byte_I2C1(addr1, Calib_Reg, calibrate_value);
-    INA226_Write2Byte_I2C1(addr2, Calib_Reg, calibrate_value);
+//    INA226_Write2Byte_I2C2(addr7, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
+    INA226_Write2Byte_I2C1(addr8, Config_Reg, 0x4127);//0100_010_100_100_111 //采集16次取平均值更新一次,连续测量分流电压和总线电压
+    INA226_Write2Byte_I2C2(addr1, Calib_Reg, calibrate_value);
+    INA226_Write2Byte_I2C2(addr2, Calib_Reg, calibrate_value);
     INA226_Write2Byte_I2C1(addr3, Calib_Reg, calibrate_value);
     INA226_Write2Byte_I2C1(addr4, Calib_Reg, calibrate_value);
     INA226_Write2Byte_I2C1(addr5, Calib_Reg, calibrate_value);
     INA226_Write2Byte_I2C2(addr6, Calib_Reg, calibrate_value);
-    INA226_Write2Byte_I2C2(addr7, Calib_Reg, calibrate_value);
-    INA226_Write2Byte_I2C2(addr8, Calib_Reg, calibrate_value);
+//    INA226_Write2Byte_I2C2(addr7, Calib_Reg, calibrate_value);
+    INA226_Write2Byte_I2C1(addr8, Calib_Reg, calibrate_value);
 
-    INA226_Write2Byte_I2C1(addr1, Mask_En_Reg, 0x8001);
-    INA226_Write2Byte_I2C1(addr2, Mask_En_Reg, 0x8001);
+    INA226_Write2Byte_I2C2(addr1, Mask_En_Reg, 0x8001);
+    INA226_Write2Byte_I2C2(addr2, Mask_En_Reg, 0x8001);
     INA226_Write2Byte_I2C1(addr3, Mask_En_Reg, 0x8001);
     INA226_Write2Byte_I2C1(addr4, Mask_En_Reg, 0x8001);
     INA226_Write2Byte_I2C1(addr5, Mask_En_Reg, 0x8001);
     INA226_Write2Byte_I2C2(addr6, Mask_En_Reg, 0x8001);
-    INA226_Write2Byte_I2C2(addr7, Mask_En_Reg, 0x8001);
-    INA226_Write2Byte_I2C2(addr8, Mask_En_Reg, 0x8001);
+//    INA226_Write2Byte_I2C2(addr7, Mask_En_Reg, 0x8001);
+    INA226_Write2Byte_I2C1(addr8, Mask_En_Reg, 0x8001);
 
 
-    INA226_Write2Byte_I2C1(addr1, Alert_Reg_limit , 0x320);//960 3
-    INA226_Write2Byte_I2C1(addr2, Alert_Reg_limit , 0x320);
+    INA226_Write2Byte_I2C2(addr1, Alert_Reg_limit , 0x320);//960 3
+    INA226_Write2Byte_I2C2(addr2, Alert_Reg_limit , 0x320);
     INA226_Write2Byte_I2C1(addr3, Alert_Reg_limit , 0x320);
     INA226_Write2Byte_I2C1(addr4, Alert_Reg_limit , 0x320);
     INA226_Write2Byte_I2C1(addr5, Alert_Reg_limit , 0x320);
     INA226_Write2Byte_I2C2(addr6, Alert_Reg_limit , 0x320);
-    INA226_Write2Byte_I2C2(addr7, Alert_Reg_limit , 0x320);
-    INA226_Write2Byte_I2C2(addr8, Alert_Reg_limit , 0x320);
+//    INA226_Write2Byte_I2C2(addr7, Alert_Reg_limit , 0x320);
+    INA226_Write2Byte_I2C1(addr8, Alert_Reg_limit , 0x320);
     uint16_t y;
-    INA226_Read2Byte_I2C1(addr1,Mask_En_Reg,&y);
-    INA226_Read2Byte_I2C1(addr2,Mask_En_Reg,&y);
+    INA226_Read2Byte_I2C2(addr1,Mask_En_Reg,&y);
+    INA226_Read2Byte_I2C2(addr2,Mask_En_Reg,&y);
     INA226_Read2Byte_I2C1(addr3,Mask_En_Reg,&y);
     INA226_Read2Byte_I2C1(addr4,Mask_En_Reg,&y);
     INA226_Read2Byte_I2C1(addr5,Mask_En_Reg,&y);
     INA226_Read2Byte_I2C2(addr6,Mask_En_Reg,&y);
-    INA226_Read2Byte_I2C2(addr7,Mask_En_Reg,&y);
-    INA226_Read2Byte_I2C2(addr8,Mask_En_Reg,&y);
+//    INA226_Read2Byte_I2C2(addr7,Mask_En_Reg,&y);
+    INA226_Read2Byte_I2C1(addr8,Mask_En_Reg,&y);
 
     Delay_Ms(10);
     printf("INA226 INIT end\r\n");

@@ -113,6 +113,11 @@ int main(void)
                     isLongTouch = 0;
                     sprintf(Screen_Txt,"p%d",old_key-1);
                     TCJSetPic(Screen_Txt,0);
+                    sprintf(Screen_Txt,"page0.p%d",old_key-1);
+                    TCJSetPic(Screen_Txt,0);
+
+                    TCJSendTxt("t32","状态：关");
+
                 } else
                 {
                     COM_Mode[old_key - 1] = !COM_Mode[old_key - 1];
@@ -121,35 +126,47 @@ int main(void)
                         case 1:
                             kaiguan1;
                             TCJSetPic("p0",COM_Mode[old_key-1]);
+                            TCJSetPic("page0.p0",COM_Mode[old_key-1]);
+                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
                             break;
                         case 2:
                             kaiguan2;
                             TCJSetPic("p1",COM_Mode[old_key-1]);
-
+                            TCJSetPic("page0.p1",COM_Mode[old_key-1]);
+                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
                             break;
                         case 3:
                             kaiguan3;
                             TCJSetPic("p2",COM_Mode[old_key-1]);
-
+                            TCJSetPic("page0.p2",COM_Mode[old_key-1]);
+                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
                             break;
                         case 4:
                             kaiguan4;
                             TCJSetPic("p3",COM_Mode[old_key-1]);
+                            TCJSetPic("page0.p3",COM_Mode[old_key-1]);
+                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
 
                             break;
                         case 5:
                             kaiguan5;
                             TCJSetPic("p4",COM_Mode[old_key-1]);
+                            TCJSetPic("page0.p4",COM_Mode[old_key-1]);
+                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
 
                             break;
                         case 6:
                             kaiguan6;
                             TCJSetPic("p5",COM_Mode[old_key-1]);
+                            TCJSetPic("page0.p5",COM_Mode[old_key-1]);
+                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
 
                             break;
                         case 7:
                             kaiguan7;
                             TCJSetPic("p6",COM_Mode[old_key-1]);
+                            TCJSetPic("page0.p6",COM_Mode[old_key-1]);
+                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
 
                             break;
                         case 8:
@@ -167,7 +184,7 @@ int main(void)
         Delay_Ms(10);
         //电压监测
 
-        if (n++ == 20)
+        if (n++ == 100)
         {
             n = 0;
             if (led == 1)
@@ -178,27 +195,30 @@ int main(void)
                 led = 1;
             }
             GPIO_WriteBit(GPIOA, GPIO_Pin_0, led);
-int tt;
-            if (INA226_Read2Byte_I2C1(addr1, Bus_V_Reg, &temp) == 0)
+            int tt;
+            if (INA226_Read2Byte_I2C2(addr1, Bus_V_Reg, &temp) == 0)
             {
                 Bus_V[0] = temp * (double) 0.00125003;
                 if (Bus_V[0] < 1 && COM_Mode[0] == WORKING)
                 {
                     COM_Mode[0] = ALARMING;
                     kaiguan1;
-                    INA226_Read2Byte_I2C1(addr1, Mask_En_Reg, &tt);
+                    INA226_Read2Byte_I2C2(addr1, Mask_En_Reg, &tt);
                     TCJSetPic("p0", 4);
+                    TCJSendTxt("t32","状态：过流");
                 }
             }
-            if (INA226_Read2Byte_I2C1(addr2, Bus_V_Reg, &temp) == 0)
+            if (INA226_Read2Byte_I2C2(addr2, Bus_V_Reg, &temp) == 0)
             {
                 Bus_V[1] = temp * (double) 0.00125003;
                 if (Bus_V[1] < 1 && COM_Mode[1] == WORKING)
                 {
                     COM_Mode[1] = ALARMING;
-                    INA226_Read2Byte_I2C1(addr2, Mask_En_Reg, &tt);
+                    INA226_Read2Byte_I2C2(addr2, Mask_En_Reg, &tt);
                     kaiguan2;
                     TCJSetPic("p1", 4);
+                    TCJSendTxt("t32","状态：过流");
+
                 }
             }
             if (INA226_Read2Byte_I2C1(addr3, Bus_V_Reg, &temp) == 0)
@@ -210,6 +230,8 @@ int tt;
                     INA226_Read2Byte_I2C1(addr3, Mask_En_Reg, &tt);
                     kaiguan3;
                     TCJSetPic("p2", 4);
+                    TCJSendTxt("t32","状态：过流");
+
                 }
             }
             if (INA226_Read2Byte_I2C1(addr4, Bus_V_Reg, &temp) == 0)
@@ -221,6 +243,8 @@ int tt;
                     INA226_Read2Byte_I2C1(addr4, Mask_En_Reg, &tt);
                     kaiguan4;
                     TCJSetPic("p3", 4);
+                    TCJSendTxt("t32","状态：过流");
+
                 }
             }
             if (INA226_Read2Byte_I2C1(addr5, Bus_V_Reg, &temp) == 0)
@@ -232,6 +256,8 @@ int tt;
                     INA226_Read2Byte_I2C1(addr5, Mask_En_Reg, &tt);
                     kaiguan5;
                     TCJSetPic("p4", 4);
+                    TCJSendTxt("t32","状态：过流");
+
                 }
             }
             if (INA226_Read2Byte_I2C2(addr6, Bus_V_Reg, &temp) == 0)
@@ -243,26 +269,30 @@ int tt;
                     INA226_Read2Byte_I2C2(addr6, Mask_En_Reg, &tt);
                     kaiguan6;
                     TCJSetPic("p5", 4);
+                    TCJSendTxt("t32","状态：过流");
+
                 }
             }
-            if (INA226_Read2Byte_I2C2(addr7, Bus_V_Reg, &temp) == 0)
-            {
-                Bus_V[6] = temp * (double) 0.00125003;
-                if (Bus_V[6] < 1 && COM_Mode[6] == WORKING)
-                {
-                    COM_Mode[6] = ALARMING;
-                    INA226_Read2Byte_I2C2(addr7, Mask_En_Reg, &tt);
-                    kaiguan7;
-                    TCJSetPic("p6", 4);
-                }
-            }
-            if (INA226_Read2Byte_I2C2(addr8, Bus_V_Reg, &temp) == 0)
+//            if (INA226_Read2Byte_I2C2(addr7, Bus_V_Reg, &temp) == 0)
+//            {
+//                Bus_V[6] = temp * (double) 0.00125003;
+//                if (Bus_V[6] < 1 && COM_Mode[6] == WORKING)
+//                {
+//                    COM_Mode[6] = ALARMING;
+//                    INA226_Read2Byte_I2C2(addr7, Mask_En_Reg, &tt);
+//                    kaiguan7;
+//                    TCJSetPic("p6", 4);
+//                    TCJSendTxt("t32","状态：过流");
+//
+//                }
+//            }
+            if (INA226_Read2Byte_I2C1(addr8, Bus_V_Reg, &temp) == 0)
             {
                 Bus_V[7] = temp * (double) 0.00125003;
                 if (Bus_V[7] < 1 && COM_Mode[7] == WORKING)
                 {
                     COM_Mode[7] = ALARMING;
-                    INA226_Read2Byte_I2C2(addr8, Mask_En_Reg, &tt);
+                    INA226_Read2Byte_I2C1(addr8, Mask_En_Reg, &tt);
                     kaiguan8;
 //                    TCJSetPic("p7",4);      第八个端口
                 }
@@ -277,7 +307,7 @@ int tt;
                 j++;
             }
             //电流监测
-            if (INA226_Read2Byte_I2C1(addr1, Current_Reg, &temp) == 0)
+            if (INA226_Read2Byte_I2C2(addr1, Current_Reg, &temp) == 0)
             {
                 if (temp < 65000)
                 {
@@ -287,7 +317,7 @@ int tt;
                     current[0] = 0;
                 }
             }
-            if (INA226_Read2Byte_I2C1(addr2, Current_Reg, &temp) == 0)
+            if (INA226_Read2Byte_I2C2(addr2, Current_Reg, &temp) == 0)
             {
                 if (temp < 65000)
                 {
@@ -337,17 +367,17 @@ int tt;
                     current[5] = 0;
                 }
             }
-            if (INA226_Read2Byte_I2C2(addr7, Current_Reg, &temp) == 0)
-            {
-                if (temp < 65000)
-                {
-                    current[6] = temp * 0.0001916;
-                } else
-                {
-                    current[6] = 0;
-                }
-            }
-            if (INA226_Read2Byte_I2C2(addr8, Current_Reg, &temp) == 0)
+//            if (INA226_Read2Byte_I2C2(addr7, Current_Reg, &temp) == 0)
+//            {
+//                if (temp < 65000)
+//                {
+//                    current[6] = temp * 0.0001916;
+//                } else
+//                {
+//                    current[6] = 0;
+//                }
+//            }
+            if (INA226_Read2Byte_I2C1(addr8, Current_Reg, &temp) == 0)
             {
                 if (temp < 65000)
                 {
@@ -396,27 +426,35 @@ int tt;
                     {
                         case 1:
                             kaiguan1;
+                            printf("1\r\n");
                             break;
                         case 2:
                             kaiguan2;
+                            printf("2\r\n");
                             break;
                         case 3:
                             kaiguan3;
+                            printf("3\r\n");
                             break;
                         case 4:
                             kaiguan4;
+                            printf("4\r\n");
                             break;
                         case 5:
                             kaiguan5;
+                            printf("5\r\n");
                             break;
                         case 6:
                             kaiguan6;
+                            printf("6\r\n");
                             break;
                         case 7:
                             kaiguan7;
+                            printf("7\r\n");
                             break;
                         case 8:
                             kaiguan8;
+                            printf("8\r\n");
                             break;
                     }
                     break;
@@ -424,12 +462,12 @@ int tt;
                     switch (RxBuffer1[1])
                     {
                         case 1:
-                            INA226_Read2Byte_I2C1(addr1, Mask_En_Reg, &t);
+                            INA226_Read2Byte_I2C2(addr1, Mask_En_Reg, &t);
                             GPIO_WriteBit(GPIOB, GPIO_Pin_12, 0);
                             COM_Mode[0] = CLOSING;
                             break;
                         case 2:
-                            INA226_Read2Byte_I2C1(addr2, Mask_En_Reg, &t);
+                            INA226_Read2Byte_I2C2(addr2, Mask_En_Reg, &t);
                             GPIO_WriteBit(GPIOB, GPIO_Pin_13, 0);
                             COM_Mode[1] = CLOSING;
                             break;
@@ -454,12 +492,12 @@ int tt;
                             COM_Mode[5] = CLOSING;
                             break;
                         case 7:
-                            INA226_Read2Byte_I2C2(addr7, Mask_En_Reg, &t);
+                            INA226_Read2Byte_I2C2(addr6, Mask_En_Reg, &t);
                             GPIO_WriteBit(GPIOA, GPIO_Pin_12, 0);
                             COM_Mode[6] = CLOSING;
                             break;
                         case 8:
-                            INA226_Read2Byte_I2C2(addr8, Mask_En_Reg, &t);
+                            INA226_Read2Byte_I2C1(addr8, Mask_En_Reg, &t);
                             GPIO_WriteBit(GPIOA, GPIO_Pin_15, 0);
                             COM_Mode[7] = CLOSING;
                             break;
@@ -469,44 +507,44 @@ int tt;
                     switch (RxBuffer1[1])
                     {
                         case 1:
-                            INA226_Write2Byte_I2C1(addr1,
+                            INA226_Write2Byte_I2C2(addr1,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 800);//上限5A
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);//上限5A
                             break;
                         case 2:
-                            INA226_Write2Byte_I2C1(addr2,
+                            INA226_Write2Byte_I2C2(addr2,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 800);
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);
                             break;
                         case 3:
                             INA226_Write2Byte_I2C1(addr3,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 800);
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);
                             break;
                         case 4:
                             INA226_Write2Byte_I2C1(addr4,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 800);
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);
                             break;
                         case 5:
                             INA226_Write2Byte_I2C1(addr5,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 800);
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);
                             break;
                         case 6:
                             INA226_Write2Byte_I2C2(addr6,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 800);
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);
                             break;
                         case 7:
-                            INA226_Write2Byte_I2C2(addr7,
+                            INA226_Write2Byte_I2C2(addr6,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 800);
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);
                             break;
                         case 8:
-                            INA226_Write2Byte_I2C2(addr8,
+                            INA226_Write2Byte_I2C1(addr8,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 800);
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);
                             break;
                         default:
                             break;

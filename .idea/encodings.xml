@@ -2,6 +2,9 @@
 <project version="4">
   <component name="Encoding">
     <file url="file://$PROJECT_DIR$/Debug/debug.c" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/User/KAIGUAN.h" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/User/TJCScreen.c" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/User/TJCScreen.h" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/User/main.c" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/User/uart.c" charset="UTF-8" />
     <file url="PROJECT" charset="GBK" />

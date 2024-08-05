@@ -9,13 +9,13 @@
 //#define READ_ADDR                  0x9e	 //A0=GND，A1=GND /  / R=1, W=0
 //#define WRITE_ADDR                 0x9e
 #define addr1                      0x80
-#define addr2                      0x82
+#define addr2                      0x86
 #define addr3                      0x84
 #define addr4                      0x86
-#define addr5                      0x88
-#define addr6                      0x80
-#define addr7                      0x82
-#define addr8                      0x84
+#define addr5                      0x98
+#define addr6                      0x84
+//#define addr7                      0x82
+#define addr8                      0x80
 #define Config_Reg                 0x00
 #define Shunt_V_Reg                0x01//并联电压
 #define Bus_V_Reg                  0x02//总线电2

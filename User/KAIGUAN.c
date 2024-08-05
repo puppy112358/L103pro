@@ -29,7 +29,7 @@ void kaiguan_Init(){
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOA, &GPIO_InitStructure);
 
-    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_5 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
+    GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9 | GPIO_Pin_5 | GPIO_Pin_12 | GPIO_Pin_13 | GPIO_Pin_14 | GPIO_Pin_15;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
     GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
     GPIO_Init(GPIOB, &GPIO_InitStructure);
@@ -41,11 +41,13 @@ void kaiguan_Init(){
     GPIO_WriteBit(GPIOB, GPIO_Pin_12, 0);
     GPIO_WriteBit(GPIOB, GPIO_Pin_13, 0);
     GPIO_WriteBit(GPIOB, GPIO_Pin_14, 0);
-    GPIO_WriteBit(GPIOB, GPIO_Pin_15, 0);
+    GPIO_WriteBit(GPIOA, GPIO_Pin_15, 0);
     GPIO_WriteBit(GPIOA, GPIO_Pin_8,  0);
     GPIO_WriteBit(GPIOA, GPIO_Pin_11, 0);
     GPIO_WriteBit(GPIOA, GPIO_Pin_12, 0);
-    GPIO_WriteBit(GPIOA, GPIO_Pin_15, 1);
+    GPIO_WriteBit(GPIOB, GPIO_Pin_5, 1);//继电器
+    GPIO_WriteBit(GPIOB, GPIO_Pin_9, 1);//大开关
+
 }
 int ReadKey(){
     if (jianpan1 == 0){
