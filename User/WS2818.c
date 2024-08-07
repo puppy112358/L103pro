@@ -5,13 +5,13 @@
 #include "WS2818.h"
 /* PWM Output Mode Definition */
 uint16_t color_buf5[COLOR5_BUFFER_LEN] = {0};
-uint16_t color_buf3[COLOR3_BUFFER_LEN] = {0};
+uint16_t color_buf4[COLOR4_BUFFER_LEN] = {0};
 
 void WS2812Init(){
     TIM2_PWMOut_Init(10-1, 12-1, 0);
     TIM3_PWMOut_Init(10-1, 12-1, 0);
     TIM2_DMA_Init(DMA1_Channel2, (u32)TIM2_CH2CVR_ADDRESS, COLOR5_BUFFER_LEN);
-    TIM3_DMA_Init(DMA1_Channel3, (u32)TIM3_CH2CVR_ADDRESS, COLOR3_BUFFER_LEN);
+    TIM3_DMA_Init(DMA1_Channel3, (u32)TIM3_CH2CVR_ADDRESS, COLOR4_BUFFER_LEN);
     TIM_DMACmd(TIM2, TIM_DMA_Update, ENABLE);
     TIM_DMACmd(TIM3, TIM_DMA_Update, ENABLE);
     TIM_Cmd(TIM2, ENABLE);
@@ -22,9 +22,9 @@ void WS2812Init(){
         set5PixelColor(i, 0, 0, 0);
     }
     for (int i = 0; i < 3; i++) {
-        set3PixelColor(i, 0, 0, 0);
+        set4PixelColor(i, 0, 0, 0);
     }
-    set3PixelColor(2,0,255,0);
+    set4PixelColor(2, 0, 255, 0);
 
 }
 
@@ -66,34 +66,34 @@ void set5PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b)
 /// \param r
 /// \param g
 /// \param b
-void set3PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b)
+void set4PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b)
 {
     int i = 0, j = id * 24u;
-    if (id >= 3) {
+    if (id >= 4) {
         return;
     }
 
     for (i = 0; i < 8; i++) {
         if (g & (0x80 >> i)) {
-            color_buf3[j] = CODE_1;
+            color_buf4[j] = CODE_1;
         } else {
-            color_buf3[j] = CODE_0;
+            color_buf4[j] = CODE_0;
         }
         j++;
     }
     for (i = 0; i < 8; i++) {
         if (r & (0x80 >> i)) {
-            color_buf3[j] = CODE_1;
+            color_buf4[j] = CODE_1;
         } else {
-            color_buf3[j] = CODE_0;
+            color_buf4[j] = CODE_0;
         }
         j++;
     }
     for (i = 0; i < 8; i++) {
         if (b & (0x80 >> i)) {
-            color_buf3[j] = CODE_1;
+            color_buf4[j] = CODE_1;
         } else {
-            color_buf3[j] = CODE_0;
+            color_buf4[j] = CODE_0;
         }
         j++;
     }
@@ -106,7 +106,7 @@ void w2812_sync()
     DMA_Cmd( DMA1_Channel2, ENABLE);
     TIM_Cmd( TIM2, ENABLE);
     while(DMA_GetCurrDataCounter(DMA1_Channel3)!=0);
-    DMA_SetCurrDataCounter(DMA1_Channel3, COLOR3_BUFFER_LEN);
+    DMA_SetCurrDataCounter(DMA1_Channel3, COLOR4_BUFFER_LEN);
     DMA_Cmd( DMA1_Channel3, ENABLE);
     TIM_Cmd( TIM3, ENABLE);
 
@@ -211,7 +211,7 @@ void TIM3_DMA_Init(DMA_Channel_TypeDef *DMA_CHx, u32 ppadr, u16 bufsize)
     DMA_DeInit(DMA_CHx);
     DMA_Cmd(DMA_CHx,DISABLE);
     DMA_InitStructure.DMA_PeripheralBaseAddr = ppadr;
-    DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t )color_buf3;
+    DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t )color_buf4;
     DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
     DMA_InitStructure.DMA_BufferSize = bufsize;
     DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;

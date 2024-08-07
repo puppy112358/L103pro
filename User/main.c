@@ -23,6 +23,7 @@ int time = 0;
 int key = 0;
 int old_key = 0;
 char isLongTouch = 0;
+int alert_flag = 0;
 
 void USART2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
@@ -82,8 +83,6 @@ int main(void)
 
     int j = 0;
     int n = 0;//循环20次刷新一次数据
-
-    COM_Mode[7] = WORKING;
     while (1)
     {
 
@@ -172,6 +171,8 @@ int main(void)
                         case 8:
                             kaiguan8;
                             break;
+                        default:
+                            break;
                     }
                 }
 
@@ -217,6 +218,8 @@ int main(void)
                     INA226_Read2Byte_I2C2(addr2, Mask_En_Reg, &tt);
                     kaiguan2;
                     TCJSetPic("p1", 4);
+                    TCJSetPic("page0.p1", 4);
+
                     TCJSendTxt("t32","状态：过流");
 
                 }
@@ -230,8 +233,8 @@ int main(void)
                     INA226_Read2Byte_I2C1(addr3, Mask_En_Reg, &tt);
                     kaiguan3;
                     TCJSetPic("p2", 4);
+                    TCJSetPic("page0.p2", 4);
                     TCJSendTxt("t32","状态：过流");
-
                 }
             }
             if (INA226_Read2Byte_I2C1(addr4, Bus_V_Reg, &temp) == 0)
@@ -244,7 +247,6 @@ int main(void)
                     kaiguan4;
                     TCJSetPic("p3", 4);
                     TCJSendTxt("t32","状态：过流");
-
                 }
             }
             if (INA226_Read2Byte_I2C1(addr5, Bus_V_Reg, &temp) == 0)
@@ -257,7 +259,6 @@ int main(void)
                     kaiguan5;
                     TCJSetPic("p4", 4);
                     TCJSendTxt("t32","状态：过流");
-
                 }
             }
             if (INA226_Read2Byte_I2C2(addr6, Bus_V_Reg, &temp) == 0)
@@ -270,7 +271,6 @@ int main(void)
                     kaiguan6;
                     TCJSetPic("p5", 4);
                     TCJSendTxt("t32","状态：过流");
-
                 }
             }
 //            if (INA226_Read2Byte_I2C2(addr7, Bus_V_Reg, &temp) == 0)
@@ -294,7 +294,6 @@ int main(void)
                     COM_Mode[7] = ALARMING;
                     INA226_Read2Byte_I2C1(addr8, Mask_En_Reg, &tt);
                     kaiguan8;
-//                    TCJSetPic("p7",4);      第八个端口
                 }
             }
             // 更新串口屏电压数据
@@ -567,6 +566,7 @@ int main(void)
             } else
             {
                 set5PixelColor(i, 255, 0, 0);
+                alert_flag = 1;
             }
 
         }
@@ -574,15 +574,22 @@ int main(void)
         {
             if (COM_Mode[i + 5] == CLOSING)
             {
-                set3PixelColor(2 - i, 100, 100, 100);
+                set4PixelColor(2 - i, 100, 100, 100);
             } else if (COM_Mode[i + 5] == WORKING)
             {
-                set3PixelColor(2 - i, 0, 255, 0);
+                set4PixelColor(2 - i, 0, 255, 0);
             } else
             {
-                set3PixelColor(2 - i, 255, 0, 0);
+                set4PixelColor(2 - i, 255, 0, 0);
+                alert_flag = 1;
             }
 
+        }
+        if (alert_flag ==1){
+            set4PixelColor(3, 255, 0, 0);
+        } else
+        {
+            set4PixelColor(3, 0, 255, 0);
         }
 
         w2812_sync();
