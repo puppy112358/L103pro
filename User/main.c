@@ -25,6 +25,9 @@ int old_key = 0;
 char isLongTouch = 0;
 int alert_flag = 0;
 
+double current_para = 0.00017297;
+double Bus_V_para = 0.00120795;
+
 void USART2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
 
 void DMA1_Channel2_IRQHandler(void) __attribute__((interrupt("WCH-Interrupt-fast")));
@@ -185,7 +188,7 @@ int main(void)
         Delay_Ms(10);
         //电压监测
 
-        if (n++ == 100)
+        if (n++ == 20)
         {
             n = 0;
             if (led == 1)
@@ -199,7 +202,7 @@ int main(void)
             int tt;
             if (INA226_Read2Byte_I2C2(addr1, Bus_V_Reg, &temp) == 0)
             {
-                Bus_V[0] = temp * (double) 0.00125003;
+                Bus_V[0] = temp * Bus_V_para;
                 if (Bus_V[0] < 1 && COM_Mode[0] == WORKING)
                 {
                     COM_Mode[0] = ALARMING;
@@ -211,7 +214,7 @@ int main(void)
             }
             if (INA226_Read2Byte_I2C2(addr2, Bus_V_Reg, &temp) == 0)
             {
-                Bus_V[1] = temp * (double) 0.00125003;
+                Bus_V[1] = temp * Bus_V_para;
                 if (Bus_V[1] < 1 && COM_Mode[1] == WORKING)
                 {
                     COM_Mode[1] = ALARMING;
@@ -226,7 +229,7 @@ int main(void)
             }
             if (INA226_Read2Byte_I2C1(addr3, Bus_V_Reg, &temp) == 0)
             {
-                Bus_V[2] = temp * (double) 0.00125003;
+                Bus_V[2] = temp * Bus_V_para;
                 if (Bus_V[2] < 1 && COM_Mode[2] == WORKING)
                 {
                     COM_Mode[2] = ALARMING;
@@ -239,7 +242,7 @@ int main(void)
             }
             if (INA226_Read2Byte_I2C1(addr4, Bus_V_Reg, &temp) == 0)
             {
-                Bus_V[3] = temp * (double) 0.00125003;
+                Bus_V[3] = temp * Bus_V_para;
                 if (Bus_V[3] < 1 && COM_Mode[3] == WORKING)
                 {
                     COM_Mode[3] = ALARMING;
@@ -251,7 +254,7 @@ int main(void)
             }
             if (INA226_Read2Byte_I2C1(addr5, Bus_V_Reg, &temp) == 0)
             {
-                Bus_V[4] = temp * (double) 0.00125003;
+                Bus_V[4] = temp * Bus_V_para;
                 if (Bus_V[4] < 1 && COM_Mode[4] == WORKING)
                 {
                     COM_Mode[4] = ALARMING;
@@ -263,12 +266,14 @@ int main(void)
             }
             if (INA226_Read2Byte_I2C2(addr6, Bus_V_Reg, &temp) == 0)
             {
-                Bus_V[5] = temp * (double) 0.00125003;
+                Bus_V[5] = temp * Bus_V_para;
                 if (Bus_V[5] < 1 && COM_Mode[5] == WORKING)
                 {
                     COM_Mode[5] = ALARMING;
+                    COM_Mode[6] = ALARMING;
                     INA226_Read2Byte_I2C2(addr6, Mask_En_Reg, &tt);
                     kaiguan6;
+                    kaiguan7;
                     TCJSetPic("p5", 4);
                     TCJSendTxt("t32","状态：过流");
                 }
@@ -288,7 +293,7 @@ int main(void)
 //            }
             if (INA226_Read2Byte_I2C1(addr8, Bus_V_Reg, &temp) == 0)
             {
-                Bus_V[7] = temp * (double) 0.00125003;
+                Bus_V[7] = temp * Bus_V_para;
                 if (Bus_V[7] < 1 && COM_Mode[7] == WORKING)
                 {
                     COM_Mode[7] = ALARMING;
@@ -310,7 +315,7 @@ int main(void)
             {
                 if (temp < 65000)
                 {
-                    current[0] = temp * 0.0001916;
+                    current[0] = temp * current_para;
                 } else
                 {
                     current[0] = 0;
@@ -320,7 +325,7 @@ int main(void)
             {
                 if (temp < 65000)
                 {
-                    current[1] = temp * 0.0001916;
+                    current[1] = temp * current_para;
                 } else
                 {
                     current[1] = 0;
@@ -330,7 +335,7 @@ int main(void)
             {
                 if (temp < 65000)
                 {
-                    current[2] = temp * 0.0001916;
+                    current[2] = temp * current_para;
                 } else
                 {
                     current[2] = 0;
@@ -340,7 +345,7 @@ int main(void)
             {
                 if (temp < 65000)
                 {
-                    current[3] = temp * 0.0001916;
+                    current[3] = temp * current_para;
                 } else
                 {
                     current[3] = 0;
@@ -350,7 +355,7 @@ int main(void)
             {
                 if (temp < 65000)
                 {
-                    current[4] = temp * 0.0001916;
+                    current[4] = temp * current_para;
                 } else
                 {
                     current[4] = 0;
@@ -360,7 +365,7 @@ int main(void)
             {
                 if (temp < 65000)
                 {
-                    current[5] = temp * 0.0001916;
+                    current[5] = temp * current_para;
                 } else
                 {
                     current[5] = 0;
@@ -380,10 +385,12 @@ int main(void)
             {
                 if (temp < 65000)
                 {
-                    current[7] = temp * 0.0001916;
+                    current[6] = temp * current_para;
+                    current[7] = temp * current_para;
                 } else
                 {
                     current[7] = 0;
+                    current[6] = 0;
                 }
             }
             // 更新串口屏电流数据
@@ -559,13 +566,13 @@ int main(void)
         {
             if (COM_Mode[i] == CLOSING)
             {
-                set5PixelColor(i, 100, 100, 100);
+                set6PixelColor(i, 100, 100, 100);
             } else if (COM_Mode[i] == WORKING)
             {
-                set5PixelColor(i, 0, 255, 0);
+                set6PixelColor(i, 0, 255, 0);
             } else
             {
-                set5PixelColor(i, 255, 0, 0);
+                set6PixelColor(i, 255, 0, 0);
                 alert_flag = 1;
             }
 
@@ -574,23 +581,24 @@ int main(void)
         {
             if (COM_Mode[i + 5] == CLOSING)
             {
-                set4PixelColor(2 - i, 100, 100, 100);
+                set3PixelColor(2 - i, 100, 100, 100);
             } else if (COM_Mode[i + 5] == WORKING)
             {
-                set4PixelColor(2 - i, 0, 255, 0);
+                set3PixelColor(2 - i, 0, 255, 0);
             } else
             {
-                set4PixelColor(2 - i, 255, 0, 0);
+                set3PixelColor(2 - i, 255, 0, 0);
                 alert_flag = 1;
             }
 
         }
         if (alert_flag ==1){
-            set4PixelColor(3, 255, 0, 0);
+            set6PixelColor(5, 255, 0, 0);
         } else
         {
-            set4PixelColor(3, 0, 255, 0);
+            set6PixelColor(5, 0, 255, 0);
         }
+        alert_flag = 0;
 
         w2812_sync();
     }

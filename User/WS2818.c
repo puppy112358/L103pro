@@ -4,58 +4,58 @@
 
 #include "WS2818.h"
 /* PWM Output Mode Definition */
-uint16_t color_buf5[COLOR5_BUFFER_LEN] = {0};
-uint16_t color_buf4[COLOR4_BUFFER_LEN] = {0};
+uint16_t color_buf6[COLOR6_BUFFER_LEN] = {0};
+uint16_t color_buf3[COLOR3_BUFFER_LEN] = {0};
 
 void WS2812Init(){
     TIM2_PWMOut_Init(10-1, 12-1, 0);
     TIM3_PWMOut_Init(10-1, 12-1, 0);
-    TIM2_DMA_Init(DMA1_Channel2, (u32)TIM2_CH2CVR_ADDRESS, COLOR5_BUFFER_LEN);
-    TIM3_DMA_Init(DMA1_Channel3, (u32)TIM3_CH2CVR_ADDRESS, COLOR4_BUFFER_LEN);
+    TIM2_DMA_Init(DMA1_Channel2, (u32)TIM2_CH2CVR_ADDRESS, COLOR6_BUFFER_LEN);
+    TIM3_DMA_Init(DMA1_Channel3, (u32)TIM3_CH2CVR_ADDRESS, COLOR3_BUFFER_LEN);
     TIM_DMACmd(TIM2, TIM_DMA_Update, ENABLE);
     TIM_DMACmd(TIM3, TIM_DMA_Update, ENABLE);
     TIM_Cmd(TIM2, ENABLE);
     TIM_Cmd(TIM3, ENABLE);
     TIM_CtrlPWMOutputs(TIM2, ENABLE);
     TIM_CtrlPWMOutputs(TIM3, ENABLE);
-    for (int i = 0; i < 5; i++) {
-        set5PixelColor(i, 0, 0, 0);
+    for (int i = 0; i < 6; i++) {
+        set6PixelColor(i, 0, 0, 0);
     }
     for (int i = 0; i < 3; i++) {
-        set4PixelColor(i, 0, 0, 0);
+        set3PixelColor(i, 0, 0, 0);
     }
-    set4PixelColor(2, 0, 255, 0);
+    set3PixelColor(2, 0, 255, 0);
 
 }
 
-void set5PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b)
+void set6PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b)
 {
     int i = 0, j = id * 24u;
-    if (id >= 5) {
+    if (id >= 6) {
         return;
     }
 
     for (i = 0; i < 8; i++) {
         if (g & (0x80 >> i)) {
-            color_buf5[j] = CODE_1;
+            color_buf6[j] = CODE_1;
         } else {
-            color_buf5[j] = CODE_0;
+            color_buf6[j] = CODE_0;
         }
         j++;
     }
     for (i = 0; i < 8; i++) {
         if (r & (0x80 >> i)) {
-            color_buf5[j] = CODE_1;
+            color_buf6[j] = CODE_1;
         } else {
-            color_buf5[j] = CODE_0;
+            color_buf6[j] = CODE_0;
         }
         j++;
     }
     for (i = 0; i < 8; i++) {
         if (b & (0x80 >> i)) {
-            color_buf5[j] = CODE_1;
+            color_buf6[j] = CODE_1;
         } else {
-            color_buf5[j] = CODE_0;
+            color_buf6[j] = CODE_0;
         }
         j++;
     }
@@ -66,7 +66,7 @@ void set5PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b)
 /// \param r
 /// \param g
 /// \param b
-void set4PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b)
+void set3PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b)
 {
     int i = 0, j = id * 24u;
     if (id >= 4) {
@@ -75,25 +75,25 @@ void set4PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b)
 
     for (i = 0; i < 8; i++) {
         if (g & (0x80 >> i)) {
-            color_buf4[j] = CODE_1;
+            color_buf3[j] = CODE_1;
         } else {
-            color_buf4[j] = CODE_0;
+            color_buf3[j] = CODE_0;
         }
         j++;
     }
     for (i = 0; i < 8; i++) {
         if (r & (0x80 >> i)) {
-            color_buf4[j] = CODE_1;
+            color_buf3[j] = CODE_1;
         } else {
-            color_buf4[j] = CODE_0;
+            color_buf3[j] = CODE_0;
         }
         j++;
     }
     for (i = 0; i < 8; i++) {
         if (b & (0x80 >> i)) {
-            color_buf4[j] = CODE_1;
+            color_buf3[j] = CODE_1;
         } else {
-            color_buf4[j] = CODE_0;
+            color_buf3[j] = CODE_0;
         }
         j++;
     }
@@ -102,11 +102,11 @@ void set4PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b)
 void w2812_sync()
 {
     while(DMA_GetCurrDataCounter(DMA1_Channel2)!=0);
-    DMA_SetCurrDataCounter(DMA1_Channel2, COLOR5_BUFFER_LEN);
+    DMA_SetCurrDataCounter(DMA1_Channel2, COLOR6_BUFFER_LEN);
     DMA_Cmd( DMA1_Channel2, ENABLE);
     TIM_Cmd( TIM2, ENABLE);
     while(DMA_GetCurrDataCounter(DMA1_Channel3)!=0);
-    DMA_SetCurrDataCounter(DMA1_Channel3, COLOR4_BUFFER_LEN);
+    DMA_SetCurrDataCounter(DMA1_Channel3, COLOR3_BUFFER_LEN);
     DMA_Cmd( DMA1_Channel3, ENABLE);
     TIM_Cmd( TIM3, ENABLE);
 
@@ -180,7 +180,7 @@ void TIM2_DMA_Init(DMA_Channel_TypeDef *DMA_CHx, u32 ppadr, u16 bufsize)
     DMA_DeInit(DMA_CHx);
     DMA_Cmd(DMA_CHx,DISABLE);
     DMA_InitStructure.DMA_PeripheralBaseAddr = ppadr;
-    DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t )color_buf5;
+    DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t )color_buf6;
     DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
     DMA_InitStructure.DMA_BufferSize = bufsize;
     DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
@@ -211,7 +211,7 @@ void TIM3_DMA_Init(DMA_Channel_TypeDef *DMA_CHx, u32 ppadr, u16 bufsize)
     DMA_DeInit(DMA_CHx);
     DMA_Cmd(DMA_CHx,DISABLE);
     DMA_InitStructure.DMA_PeripheralBaseAddr = ppadr;
-    DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t )color_buf4;
+    DMA_InitStructure.DMA_MemoryBaseAddr = (uint32_t )color_buf3;
     DMA_InitStructure.DMA_DIR = DMA_DIR_PeripheralDST;
     DMA_InitStructure.DMA_BufferSize = bufsize;
     DMA_InitStructure.DMA_PeripheralInc = DMA_PeripheralInc_Disable;
@@ -286,7 +286,7 @@ void led_example_0(void)
         for(j = 0; j<MAX_STEP;j+=1) {
             uint32_t color = interpolateColors(c,next_color,j);
             for (int var = 0; var < Pixel_NUM; ++var) {
-                set5PixelColor(var, hex2rgb(color));
+                set6PixelColor(var, hex2rgb(color));
             }
             w2812_sync();
             Delay_Ms(10);
@@ -314,7 +314,7 @@ void led_example_1(void)
             i=0;
         }
         for (int var = 0; var < Pixel_NUM; ++var) {
-            set5PixelColor(var, hex2rgb(c));
+            set6PixelColor(var, hex2rgb(c));
         }
         w2812_sync();
         Delay_Ms(100);
@@ -342,10 +342,10 @@ void led_example_2(void)
         }
 
         for (int var = 0; var < Pixel_NUM; var+=1) {
-            set5PixelColor(var, hex2rgb(c));
+            set6PixelColor(var, hex2rgb(c));
             w2812_sync();
             Delay_Ms(100);
-            set5PixelColor(var, 0, 0, 0);
+            set6PixelColor(var, 0, 0, 0);
             w2812_sync();
             Delay_Ms(10);
         }
