@@ -80,7 +80,7 @@ int main(void)
 
 //  串口屏文本
     char Screen_Txt[20];
-    char Index[3];
+    char Index[10];
     volatile uint8_t led = 0;
     u16 temp = 0;
 
@@ -88,11 +88,6 @@ int main(void)
     int n = 0;//循环20次刷新一次数据
     while (1)
     {
-        u16 bus_current;
-        INA226_Read2Byte_I2C2(addr1, Shunt_V_Reg, &bus_current);
-        printf("bus_current:%f\r\n", (double )(bus_current*12800.0/2048.0));
-
-
         key = ReadKey();
         if (old_key != key)
         {
@@ -201,7 +196,7 @@ int main(void)
         Delay_Ms(10);
         //电压监测
 
-        if (n++ == 20)
+        if (n++ == 100)
         {
             n = 0;
             if (led == 1)
@@ -323,7 +318,7 @@ int main(void)
             for (int i = 1; i <= 22; i += 3)
             {
                 sprintf(Screen_Txt, "电压：%.4fV", Bus_V[j]);
-                sprintf(Index, "t%d", i);
+                sprintf(Index, "page0.t%d", i);
                 TCJSendTxt(Index, Screen_Txt);
                 j++;
             }
@@ -414,7 +409,7 @@ int main(void)
             for (int i = 0; i <= 21; i += 3)
             {
                 sprintf(Screen_Txt, "电流：%.4fA", current[j]);
-                sprintf(Index, "t%d", i);
+                sprintf(Index, "page0.t%d", i);
                 TCJSendTxt(Index, Screen_Txt);
                 j++;
             }
@@ -432,11 +427,12 @@ int main(void)
             for (int i = 2; i <= 23; i += 3)
             {
                 sprintf(Screen_Txt, "功耗：%.4fW", power[j]);
-                sprintf(Index, "t%d", i);
+                sprintf(Index, "page0.t%d", i);
                 TCJSendTxt(Index, Screen_Txt);
                 j++;
             }
         }
+
         uint16_t t;
         if (RxBuffer1[0])
         {
@@ -608,7 +604,7 @@ int main(void)
             set6PixelColor(5, 255, 0, 0);
         } else
         {
-            set6PixelColor(5, 0, 255, 0);
+            set6PixelColor(5, 10, 10, 255);
         }
         alert_flag = 0;
 
@@ -629,7 +625,7 @@ void USART2_IRQHandler(void)
 //        }
     } else if (USART_GetITStatus(USART2, USART_IT_IDLE) != RESET){
         USART_ClearITPendingBit(USART2, USART_IT_IDLE);
-        RxCnt1 = 0;
+//        RxCnt1 = 0;
         USART_ReceiveData(USART2);
     }
 }
