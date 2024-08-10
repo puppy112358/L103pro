@@ -19,10 +19,9 @@
 #define jianpan3 GPIO_ReadInputDataBit(GPIOA,GPIO_Pin_6)
 #define jianpan4 GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_0)
 #define jianpan5 GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_1)
-#define jianpan6 GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_4)
+#define jianpan8 GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_4)
 #define jianpan7 GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_3)
-#define jianpan8 GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_2)
-#define big_button GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_1)
+#define jianpan6 GPIO_ReadInputDataBit(GPIOB,GPIO_Pin_2)
 
 enum working_mode
 {

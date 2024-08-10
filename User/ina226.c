@@ -436,14 +436,14 @@ void INA226_Init(void) {
     INA226_Write2Byte_I2C1(addr8, Mask_En_Reg, 0x8001);
 
 
-    INA226_Write2Byte_I2C2(addr1, Alert_Reg_limit , 0x320);//960 3
-    INA226_Write2Byte_I2C2(addr2, Alert_Reg_limit , 0x320);
-    INA226_Write2Byte_I2C1(addr3, Alert_Reg_limit , 0x320);
-    INA226_Write2Byte_I2C1(addr4, Alert_Reg_limit , 0x320);
-    INA226_Write2Byte_I2C1(addr5, Alert_Reg_limit , 0x320);
-    INA226_Write2Byte_I2C2(addr6, Alert_Reg_limit , 0x320);
+    INA226_Write2Byte_I2C2(addr1, Alert_Reg_limit , 0x39d);//960 3
+    INA226_Write2Byte_I2C2(addr2, Alert_Reg_limit , 0x3a6);
+    INA226_Write2Byte_I2C1(addr3, Alert_Reg_limit , 0x36e);
+    INA226_Write2Byte_I2C1(addr4, Alert_Reg_limit , 0x383);
+    INA226_Write2Byte_I2C1(addr5, Alert_Reg_limit , 0x384);
+    INA226_Write2Byte_I2C2(addr6, Alert_Reg_limit , 0x360);
 //    INA226_Write2Byte_I2C2(addr7, Alert_Reg_limit , 0x320);
-    INA226_Write2Byte_I2C1(addr8, Alert_Reg_limit , 0x320);
+    INA226_Write2Byte_I2C1(addr8, Alert_Reg_limit , 0x39d);
     uint16_t y;
     INA226_Read2Byte_I2C2(addr1,Mask_En_Reg,&y);
     INA226_Read2Byte_I2C2(addr2,Mask_En_Reg,&y);

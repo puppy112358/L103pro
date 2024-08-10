@@ -88,6 +88,10 @@ int main(void)
     int n = 0;//循环20次刷新一次数据
     while (1)
     {
+        u16 bus_current;
+        INA226_Read2Byte_I2C2(addr1, Shunt_V_Reg, &bus_current);
+        printf("bus_current:%f\r\n", (double )(bus_current*12800.0/2048.0));
+
 
         key = ReadKey();
         if (old_key != key)
@@ -159,13 +163,22 @@ int main(void)
                             break;
                         case 6:
                             kaiguan6;
+                            COM_Mode[6] = COM_Mode[5];
                             TCJSetPic("p5",COM_Mode[old_key-1]);
                             TCJSetPic("page0.p5",COM_Mode[old_key-1]);
                             TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
+                            TCJSetPic("p6",COM_Mode[old_key-1]);
+                            TCJSetPic("page0.p6",COM_Mode[old_key-1]);
+                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
+
 
                             break;
                         case 7:
                             kaiguan7;
+                            COM_Mode[5] = COM_Mode[6];
+                            TCJSetPic("p5",COM_Mode[old_key-1]);
+                            TCJSetPic("page0.p5",COM_Mode[old_key-1]);
+                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
                             TCJSetPic("p6",COM_Mode[old_key-1]);
                             TCJSetPic("page0.p6",COM_Mode[old_key-1]);
                             TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
@@ -267,6 +280,7 @@ int main(void)
             if (INA226_Read2Byte_I2C2(addr6, Bus_V_Reg, &temp) == 0)
             {
                 Bus_V[5] = temp * Bus_V_para;
+                Bus_V[6] = Bus_V[5];
                 if (Bus_V[5] < 1 && COM_Mode[5] == WORKING)
                 {
                     COM_Mode[5] = ALARMING;
@@ -276,6 +290,9 @@ int main(void)
                     kaiguan7;
                     TCJSetPic("p5", 4);
                     TCJSendTxt("t32","状态：过流");
+                    TCJSetPic("p6", 4);
+                    TCJSendTxt("t32","状态：过流");
+
                 }
             }
 //            if (INA226_Read2Byte_I2C2(addr7, Bus_V_Reg, &temp) == 0)
@@ -325,7 +342,7 @@ int main(void)
             {
                 if (temp < 65000)
                 {
-                    current[1] = temp * current_para;
+                    current[1] = temp * 0.00017118;
                 } else
                 {
                     current[1] = 0;
@@ -335,7 +352,7 @@ int main(void)
             {
                 if (temp < 65000)
                 {
-                    current[2] = temp * current_para;
+                    current[2] = temp * 0.00018217;
                 } else
                 {
                     current[2] = 0;
@@ -345,7 +362,7 @@ int main(void)
             {
                 if (temp < 65000)
                 {
-                    current[3] = temp * current_para;
+                    current[3] = temp * 0.00017779;
                 } else
                 {
                     current[3] = 0;
@@ -355,7 +372,7 @@ int main(void)
             {
                 if (temp < 65000)
                 {
-                    current[4] = temp * current_para;
+                    current[4] = temp * 0.00017773;
                 } else
                 {
                     current[4] = 0;
@@ -365,11 +382,12 @@ int main(void)
             {
                 if (temp < 65000)
                 {
-                    current[5] = temp * current_para;
+                    current[5] = temp * 0.00018502;
                 } else
                 {
                     current[5] = 0;
                 }
+                current[6] = current[5];
             }
 //            if (INA226_Read2Byte_I2C2(addr7, Current_Reg, &temp) == 0)
 //            {
@@ -385,12 +403,10 @@ int main(void)
             {
                 if (temp < 65000)
                 {
-                    current[6] = temp * current_para;
                     current[7] = temp * current_para;
                 } else
                 {
                     current[7] = 0;
-                    current[6] = 0;
                 }
             }
             // 更新串口屏电流数据
@@ -432,35 +448,29 @@ int main(void)
                     {
                         case 1:
                             kaiguan1;
-                            printf("1\r\n");
                             break;
                         case 2:
                             kaiguan2;
-                            printf("2\r\n");
                             break;
                         case 3:
                             kaiguan3;
-                            printf("3\r\n");
                             break;
                         case 4:
                             kaiguan4;
-                            printf("4\r\n");
                             break;
                         case 5:
                             kaiguan5;
-                            printf("5\r\n");
                             break;
                         case 6:
                             kaiguan6;
-                            printf("6\r\n");
+                            COM_Mode[6] = COM_Mode[5];
                             break;
                         case 7:
                             kaiguan7;
-                            printf("7\r\n");
+                            COM_Mode[5] = COM_Mode[6];
                             break;
                         case 8:
                             kaiguan8;
-                            printf("8\r\n");
                             break;
                     }
                     break;
@@ -469,42 +479,44 @@ int main(void)
                     {
                         case 1:
                             INA226_Read2Byte_I2C2(addr1, Mask_En_Reg, &t);
-                            GPIO_WriteBit(GPIOB, GPIO_Pin_12, 0);
+                            GPIO_WriteBit(GPIOA, GPIO_Pin_8, 0);
                             COM_Mode[0] = CLOSING;
                             break;
                         case 2:
                             INA226_Read2Byte_I2C2(addr2, Mask_En_Reg, &t);
-                            GPIO_WriteBit(GPIOB, GPIO_Pin_13, 0);
+                            GPIO_WriteBit(GPIOB, GPIO_Pin_14, 0);
                             COM_Mode[1] = CLOSING;
                             break;
                         case 3:
                             INA226_Read2Byte_I2C1(addr3, Mask_En_Reg, &t);
-                            GPIO_WriteBit(GPIOB, GPIO_Pin_14, 0);
+                            GPIO_WriteBit(GPIOA, GPIO_Pin_15, 0);
                             COM_Mode[2] = CLOSING;
                             break;
                         case 4:
                             INA226_Read2Byte_I2C1(addr4, Mask_En_Reg, &t);
-                            GPIO_WriteBit(GPIOB, GPIO_Pin_15, 0);
+                            GPIO_WriteBit(GPIOB, GPIO_Pin_12, 0);
                             COM_Mode[3] = CLOSING;
                             break;
                         case 5:
                             INA226_Read2Byte_I2C1(addr5, Mask_En_Reg, &t);
-                            GPIO_WriteBit(GPIOA, GPIO_Pin_8, 0);
+                            GPIO_WriteBit(GPIOA, GPIO_Pin_11, 0);
                             COM_Mode[4] = CLOSING;
                             break;
                         case 6:
                             INA226_Read2Byte_I2C2(addr6, Mask_En_Reg, &t);
-                            GPIO_WriteBit(GPIOA, GPIO_Pin_11, 0);
+                            GPIO_WriteBit(GPIOB, GPIO_Pin_13, 0);
                             COM_Mode[5] = CLOSING;
+                            COM_Mode[6] = CLOSING;
                             break;
                         case 7:
                             INA226_Read2Byte_I2C2(addr6, Mask_En_Reg, &t);
-                            GPIO_WriteBit(GPIOA, GPIO_Pin_12, 0);
+                            GPIO_WriteBit(GPIOB, GPIO_Pin_13, 0);
                             COM_Mode[6] = CLOSING;
+                            COM_Mode[5] = CLOSING;
                             break;
                         case 8:
                             INA226_Read2Byte_I2C1(addr8, Mask_En_Reg, &t);
-                            GPIO_WriteBit(GPIOA, GPIO_Pin_15, 0);
+                            GPIO_WriteBit(GPIOA, GPIO_Pin_12, 0);
                             COM_Mode[7] = CLOSING;
                             break;
                     }
@@ -515,42 +527,42 @@ int main(void)
                         case 1:
                             INA226_Write2Byte_I2C2(addr1,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);//上限5A
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.0925);//上限5A
                             break;
                         case 2:
                             INA226_Write2Byte_I2C2(addr2,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.0934);
                             break;
                         case 3:
                             INA226_Write2Byte_I2C1(addr3,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.0878);
                             break;
                         case 4:
                             INA226_Write2Byte_I2C1(addr4,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.0899);
                             break;
                         case 5:
                             INA226_Write2Byte_I2C1(addr5,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.0900);
                             break;
                         case 6:
                             INA226_Write2Byte_I2C2(addr6,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.0864);
                             break;
                         case 7:
                             INA226_Write2Byte_I2C2(addr6,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.0864);
                             break;
                         case 8:
                             INA226_Write2Byte_I2C1(addr8,
                                                    Alert_Reg_limit,
-                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.08);
+                                                   (RxBuffer1[2] | (RxBuffer1[3] << 8)) * 0.0925);
                             break;
                         default:
                             break;
@@ -581,13 +593,13 @@ int main(void)
         {
             if (COM_Mode[i + 5] == CLOSING)
             {
-                set3PixelColor(2 - i, 100, 100, 100);
+                set3PixelColor(i, 100, 100, 100);
             } else if (COM_Mode[i + 5] == WORKING)
             {
-                set3PixelColor(2 - i, 0, 255, 0);
+                set3PixelColor(i, 0, 255, 0);
             } else
             {
-                set3PixelColor(2 - i, 255, 0, 0);
+                set3PixelColor(i, 255, 0, 0);
                 alert_flag = 1;
             }
 
