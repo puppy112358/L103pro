@@ -623,9 +623,14 @@ void USART2_IRQHandler(void)
     {
         RxBuffer1[RxCnt1++] = USART_ReceiveData(USART2);
         USART_SendData(USART1, RxBuffer1[RxCnt1 - 1]);
+        USART_ClearITPendingBit(USART2, USART_IT_RXNE);
 //        if (RxCnt1 == 6) {
 //            RxCnt1 = 0;
 //        }
+    } else if (USART_GetITStatus(USART2, USART_IT_IDLE) != RESET){
+        USART_ClearITPendingBit(USART2, USART_IT_IDLE);
+        RxCnt1 = 0;
+        USART_ReceiveData(USART2);
     }
 }
 

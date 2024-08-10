@@ -81,7 +81,7 @@ void USART2_Init(void)
 
     USART_Init(USART2, &USART_InitStructure);
     USART_ITConfig(USART2, USART_IT_RXNE, ENABLE);
-//    USART_ITConfig(USART2, USART_IT_IDLE, ENABLE);
+    USART_ITConfig(USART2, USART_IT_IDLE, ENABLE);
 
     NVIC_InitStructure.NVIC_IRQChannel = USART2_IRQn;
     NVIC_InitStructure.NVIC_IRQChannelPreemptionPriority = 0;
