@@ -121,63 +121,79 @@ int main(void)
 
                 } else
                 {
-                    COM_Mode[old_key - 1] = !COM_Mode[old_key - 1];
+//                    COM_Mode[old_key - 1] = !COM_Mode[old_key - 1];
                     switch (old_key)
                     {
                         case 1:
-                            kaiguan1;
-                            TCJSetPic("p0",COM_Mode[old_key-1]);
-                            TCJSetPic("page0.p0",COM_Mode[old_key-1]);
-                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
+                            if (COM_Mode[0]!=ALARMING) {
+                                COM_Mode[0] = !COM_Mode[0];
+                                kaiguan1;
+                                TCJSetPic("page1.p0", COM_Mode[old_key - 1]);
+                                TCJSetPic("page0.p0", COM_Mode[old_key - 1]);
+                                TCJSendTxt("page1.t32", COM_Mode[old_key - 1] ? "状态：开" : "状态：关");
+                            }
                             break;
                         case 2:
-                            kaiguan2;
-                            TCJSetPic("p1",COM_Mode[old_key-1]);
-                            TCJSetPic("page0.p1",COM_Mode[old_key-1]);
-                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
+                            if (COM_Mode[1]!=ALARMING) {
+                                COM_Mode[1] = !COM_Mode[1];
+                                kaiguan2;
+                                TCJSetPic("page2.p1", COM_Mode[old_key - 1]);
+                                TCJSetPic("page0.p1", COM_Mode[old_key - 1]);
+                                TCJSendTxt("page2.t32", COM_Mode[old_key - 1] ? "状态：开" : "状态：关");
+                            }
                             break;
                         case 3:
-                            kaiguan3;
-                            TCJSetPic("p2",COM_Mode[old_key-1]);
-                            TCJSetPic("page0.p2",COM_Mode[old_key-1]);
-                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
+                            if (COM_Mode[2]!=ALARMING){
+                                COM_Mode[2]=!COM_Mode[2];
+                                kaiguan3;
+                                TCJSetPic("page3.p2",COM_Mode[old_key-1]);
+                                TCJSetPic("page0.p2",COM_Mode[old_key-1]);
+                                TCJSendTxt("page3.t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
+                            }
                             break;
                         case 4:
-                            kaiguan4;
-                            TCJSetPic("p3",COM_Mode[old_key-1]);
-                            TCJSetPic("page0.p3",COM_Mode[old_key-1]);
-                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
-
+                            if (COM_Mode[3]!=ALARMING){
+                                COM_Mode[3]=!COM_Mode[3];
+                                kaiguan4;
+                                TCJSetPic("page4.p3",COM_Mode[old_key-1]);
+                                TCJSetPic("page0.p3",COM_Mode[old_key-1]);
+                                TCJSendTxt("page4.t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
+                            }
                             break;
                         case 5:
-                            kaiguan5;
-                            TCJSetPic("p4",COM_Mode[old_key-1]);
-                            TCJSetPic("page0.p4",COM_Mode[old_key-1]);
-                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
-
+                            if (COM_Mode[4]!=ALARMING){
+                                COM_Mode[4]=!COM_Mode[4];
+                                kaiguan5;
+                                TCJSetPic("page5.p4",COM_Mode[old_key-1]);
+                                TCJSetPic("page0.p4",COM_Mode[old_key-1]);
+                                TCJSendTxt("page5.t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
+                            }
                             break;
                         case 6:
-                            kaiguan6;
-                            COM_Mode[6] = COM_Mode[5];
-                            TCJSetPic("p5",COM_Mode[old_key-1]);
-                            TCJSetPic("page0.p5",COM_Mode[old_key-1]);
-                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
-                            TCJSetPic("p6",COM_Mode[old_key-1]);
-                            TCJSetPic("page0.p6",COM_Mode[old_key-1]);
-                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
-
-
+                            if (COM_Mode[5]!=ALARMING){
+                                COM_Mode[5]=!COM_Mode[5];
+                                kaiguan6;
+                                COM_Mode[6] = COM_Mode[5];
+                                TCJSetPic("page6.p5",COM_Mode[old_key-1]);
+                                TCJSetPic("page0.p5",COM_Mode[old_key-1]);
+                                TCJSendTxt("page6.t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
+                                TCJSetPic("p6",COM_Mode[old_key-1]);
+                                TCJSetPic("page0.p6",COM_Mode[old_key-1]);
+                                TCJSendTxt("page7.t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
+                            }
                             break;
                         case 7:
-                            kaiguan7;
-                            COM_Mode[5] = COM_Mode[6];
-                            TCJSetPic("p5",COM_Mode[old_key-1]);
-                            TCJSetPic("page0.p5",COM_Mode[old_key-1]);
-                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
-                            TCJSetPic("p6",COM_Mode[old_key-1]);
-                            TCJSetPic("page0.p6",COM_Mode[old_key-1]);
-                            TCJSendTxt("t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
-
+                            if (COM_Mode[6]!=ALARMING){
+                                COM_Mode[6]=!COM_Mode[6];
+                                kaiguan7;
+                                COM_Mode[5] = COM_Mode[6];
+                                TCJSetPic("page6.p5",COM_Mode[old_key-1]);
+                                TCJSetPic("page0.p5",COM_Mode[old_key-1]);
+                                TCJSendTxt("page6.t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
+                                TCJSetPic("page7.p6",COM_Mode[old_key-1]);
+                                TCJSetPic("page0.p6",COM_Mode[old_key-1]);
+                                TCJSendTxt("page7.t32",COM_Mode[old_key-1]  ? "状态：开" : "状态：关");
+                            }
                             break;
                         case 8:
                             kaiguan8;
@@ -216,8 +232,9 @@ int main(void)
                     COM_Mode[0] = ALARMING;
                     kaiguan1;
                     INA226_Read2Byte_I2C2(addr1, Mask_En_Reg, &tt);
-                    TCJSetPic("p0", 4);
-                    TCJSendTxt("t32","状态：过流");
+                    TCJSetPic("page1.p0", 4);
+                    TCJSetPic("page0.p0", 4);
+                    TCJSendTxt("page1.t32","状态：过流");
                 }
             }
             if (INA226_Read2Byte_I2C2(addr2, Bus_V_Reg, &temp) == 0)
@@ -228,10 +245,10 @@ int main(void)
                     COM_Mode[1] = ALARMING;
                     INA226_Read2Byte_I2C2(addr2, Mask_En_Reg, &tt);
                     kaiguan2;
-                    TCJSetPic("p1", 4);
+                    TCJSetPic("page2.p1", 4);
                     TCJSetPic("page0.p1", 4);
 
-                    TCJSendTxt("t32","状态：过流");
+                    TCJSendTxt("page2.t32","状态：过流");
 
                 }
             }
@@ -243,9 +260,9 @@ int main(void)
                     COM_Mode[2] = ALARMING;
                     INA226_Read2Byte_I2C1(addr3, Mask_En_Reg, &tt);
                     kaiguan3;
-                    TCJSetPic("p2", 4);
+                    TCJSetPic("page3.p2", 4);
                     TCJSetPic("page0.p2", 4);
-                    TCJSendTxt("t32","状态：过流");
+                    TCJSendTxt("page3.t32","状态：过流");
                 }
             }
             if (INA226_Read2Byte_I2C1(addr4, Bus_V_Reg, &temp) == 0)
@@ -256,8 +273,10 @@ int main(void)
                     COM_Mode[3] = ALARMING;
                     INA226_Read2Byte_I2C1(addr4, Mask_En_Reg, &tt);
                     kaiguan4;
-                    TCJSetPic("p3", 4);
-                    TCJSendTxt("t32","状态：过流");
+                    TCJSetPic("page4.p3", 4);
+                    TCJSetPic("page0.p3", 4);
+
+                    TCJSendTxt("page4.t32","状态：过流");
                 }
             }
             if (INA226_Read2Byte_I2C1(addr5, Bus_V_Reg, &temp) == 0)
@@ -268,8 +287,10 @@ int main(void)
                     COM_Mode[4] = ALARMING;
                     INA226_Read2Byte_I2C1(addr5, Mask_En_Reg, &tt);
                     kaiguan5;
-                    TCJSetPic("p4", 4);
-                    TCJSendTxt("t32","状态：过流");
+                    TCJSetPic("page5.p4", 4);
+                    TCJSetPic("page0.p4", 4);
+
+                    TCJSendTxt("page5.t32","状态：过流");
                 }
             }
             if (INA226_Read2Byte_I2C2(addr6, Bus_V_Reg, &temp) == 0)
@@ -283,10 +304,14 @@ int main(void)
                     INA226_Read2Byte_I2C2(addr6, Mask_En_Reg, &tt);
                     kaiguan6;
                     kaiguan7;
-                    TCJSetPic("p5", 4);
-                    TCJSendTxt("t32","状态：过流");
-                    TCJSetPic("p6", 4);
-                    TCJSendTxt("t32","状态：过流");
+                    TCJSetPic("page6.p5", 4);
+                    TCJSendTxt("page6.t32","状态：过流");
+
+                    TCJSetPic("page0.p5", 4);
+                    TCJSetPic("page0.p6", 4);
+
+                    TCJSetPic("page7.p6", 4);
+                    TCJSendTxt("page7.t32","状态：过流");
 
                 }
             }
