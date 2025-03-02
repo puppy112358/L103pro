@@ -2,8 +2,8 @@
 // Created by 86180 on 2024/7/21.
 //
 
-#ifndef L103PRO_USER_WS2818_H_
-#define L103PRO_USER_WS2818_H_
+#ifndef L103PRO_USER_WS2812_H_
+#define L103PRO_USER_WS2812_H_
 #include "debug.h"
 #include "ch32l103.h"
 #define CODE_1  7
@@ -30,10 +30,6 @@ void TIM3_DMA_Init(DMA_Channel_TypeDef *DMA_CHx, u32 ppadr, u16 bufsize);
 void set6PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b);
 void set3PixelColor(uint16_t id, uint8_t r, uint8_t g, uint8_t b);
 void w2812_sync();
-uint32_t interpolateColors(uint32_t color1, uint32_t color2, uint8_t step);
-void led_example_0(void);
-void led_example_1(void);
-void led_example_2(void);
 void WS2812Init();
 
 
